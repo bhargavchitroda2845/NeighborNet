@@ -1,0 +1,234 @@
+/* =========================
+   NEWS DETAIL PAGE
+========================= */
+
+.news-detail {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 255, 0.94));
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  animation: newsDetailRise 0.55s ease;
+}
+
+.news-detail::before,
+.news-detail::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  z-index: 0;
+  opacity: 0.28;
+  animation: newsDetailGlow 12s ease-in-out infinite;
+}
+
+.news-detail::before {
+  width: 280px;
+  height: 280px;
+  top: -100px;
+  right: -90px;
+  background: radial-gradient(circle, #bfdbfe 0%, rgba(191, 219, 254, 0) 72%);
+}
+
+.news-detail::after {
+  width: 220px;
+  height: 220px;
+  left: -70px;
+  bottom: -80px;
+  background: radial-gradient(circle, #ddd6fe 0%, rgba(221, 214, 254, 0) 74%);
+  animation-delay: -4s;
+}
+
+.news-detail > * {
+  position: relative;
+  z-index: 1;
+}
+
+.news-back-btn {
+  margin-bottom: 14px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.news-back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+}
+
+.news-detail > .cursor-follow-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      240px circle at var(--mx, 50%) var(--my, 40%),
+      rgba(14, 165, 233, 0.18),
+      rgba(14, 165, 233, 0.08) 38%,
+      rgba(14, 165, 233, 0) 72%
+    ),
+    radial-gradient(
+      180px circle at calc(var(--mx, 50%) - 40px) calc(var(--my, 40%) + 20px),
+      rgba(167, 139, 250, 0.18),
+      rgba(167, 139, 250, 0.08) 34%,
+      rgba(167, 139, 250, 0) 72%
+    );
+  animation: detailCursorAura 3.4s ease-in-out infinite;
+}
+
+/* TITLE */
+.news-detail h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+/* DATE */
+.news-date {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.news-author {
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.author-link-btn {
+  border: none;
+  background: transparent;
+  color: #1d4ed8;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  text-decoration: underline;
+}
+
+.author-link-btn:hover {
+  color: #1e40af;
+}
+
+/* IMAGE */
+.news-detail img {
+  width: 100%;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+/* CONTENT */
+.news-full-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #374151;
+}
+
+.news-detail-nav {
+  margin-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.news-detail-nav button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.news-detail-nav button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+}
+
+.news-detail-nav button:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@keyframes newsDetailRise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes newsDetailGlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(10px, -10px, 0) scale(1.08);
+  }
+}
+
+@keyframes detailCursorAura {
+  0%,
+  100% {
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    filter: saturate(1.15) brightness(1.06);
+  }
+}
+
+@keyframes detailMobileDrift {
+  0%,
+  100% {
+    background-position: 50% 38%, 40% 58%;
+  }
+  50% {
+    background-position: 36% 64%, 68% 30%;
+  }
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media (max-width: 768px) {
+  .news-detail {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .news-detail h1 {
+    font-size: 22px;
+  }
+
+  .news-full-content {
+    font-size: 15px;
+  }
+
+  .news-detail img {
+    max-height: 300px;
+  }
+
+  .news-detail > .cursor-follow-glow {
+    animation: detailCursorAura 3.4s ease-in-out infinite, detailMobileDrift 6.8s ease-in-out infinite;
+    opacity: 0.95;
+  }
+}

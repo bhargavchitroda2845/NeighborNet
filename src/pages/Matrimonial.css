@@ -1,0 +1,184 @@
+.matrimonial-page {
+  --surface: #ffffff;
+  --line: #d8dce3;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #c62828;
+  min-height: 100vh;
+  padding: 28px;
+  background: radial-gradient(circle at top right, #ffe8e8 0%, #f6f8fb 55%, #eef2f7 100%);
+  color: var(--text);
+  animation: pageIn 0.45s ease;
+}
+
+.matrimonial-header {
+  max-width: 1200px;
+  margin: 0 auto 18px;
+}
+
+.matrimonial-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.matrimonial-header p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.matrimonial-filters {
+  max-width: 1200px;
+  margin: 0 auto 18px;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 12px;
+}
+
+.matrimonial-filters input,
+.matrimonial-filters select {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+}
+
+.matrimonial-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.profile-card {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.1);
+  border: 1px solid rgba(216, 220, 227, 0.6);
+  cursor: pointer;
+  transform: translateY(12px);
+  opacity: 0;
+  animation: cardIn 0.42s ease forwards;
+  animation-delay: calc(var(--index, 0) * 40ms);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.14);
+}
+
+.profile-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.profile-card:hover img {
+  transform: scale(1.04);
+  filter: brightness(0.94) saturate(1.08);
+}
+
+.profile-content {
+  padding: 12px 14px 14px;
+}
+
+.profile-content h3 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.meta-line {
+  margin: 3px 0;
+  color: #3c4658;
+  font-size: 0.9rem;
+}
+
+.bio {
+  margin: 8px 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.profile-content button {
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.profile-content button:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.empty-text {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+}
+
+@media (max-width: 1024px) {
+  .matrimonial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .matrimonial-page {
+    padding: 16px;
+  }
+
+  .matrimonial-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .matrimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card img {
+    height: 230px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matrimonial-page,
+  .profile-card {
+    animation: none !important;
+  }
+
+  .profile-card,
+  .profile-card img,
+  .profile-content button {
+    transition: none !important;
+  }
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

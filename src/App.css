@@ -1,0 +1,53 @@
+/* Global reset */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+}
+
+/* Common page style */
+.home-page,
+.about-page,
+.news-page,
+.buysell-page,
+.business-page,
+.matrimonial-page,
+.gallery-page,
+.contact-page {
+  padding: 30px;
+}
+
+/* Mobile padding & font */
+@media (max-width: 768px) {
+  .home-page,
+  .about-page,
+  .news-page,
+  .buysell-page,
+  .business-page,
+  .matrimonial-page,
+  .gallery-page,
+  .contact-page {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  p {
+    font-size: 15px;
+  }
+}

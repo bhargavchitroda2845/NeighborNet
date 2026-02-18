@@ -1,0 +1,160 @@
+{
+  "categories": [
+    { "id": 1, "name": "Achievement & Awards" },
+    { "id": 2, "name": "Events" },
+    { "id": 3, "name": "Festival" },
+    { "id": 4, "name": "Sports" }
+  ],
+  "photos": [
+    {
+      "id": 1,
+      "title": "Community Excellence Trophy",
+      "category": "Achievement & Awards",
+      "description": "Recognition ceremony for top student volunteers.",
+      "uploaded_by": "Admin Team",
+      "uploaded_at": "2026-02-10 06:45 PM",
+      "content": "Students were honored for service activities and mentoring support in the neighborhood.",
+      "image_url": "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 2,
+      "title": "Best Neighborhood Award",
+      "category": "Achievement & Awards",
+      "description": "Society committee receiving district-level recognition.",
+      "uploaded_by": "Ritika Sharma",
+      "uploaded_at": "2026-02-09 11:20 AM",
+      "content": "The committee was awarded for cleanliness, safety measures, and resident engagement.",
+      "image_url": "https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 3,
+      "title": "Youth Science Medal",
+      "category": "Achievement & Awards",
+      "description": "School students honored at annual science showcase.",
+      "uploaded_by": "Education Cell",
+      "uploaded_at": "2026-02-07 04:10 PM",
+      "content": "Young participants presented practical projects around water conservation and waste recycling.",
+      "image_url": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 4,
+      "title": "Annual Cultural Evening",
+      "category": "Events",
+      "description": "Stage performances by residents of all age groups.",
+      "uploaded_by": "Event Coordinator",
+      "uploaded_at": "2026-02-06 08:05 PM",
+      "content": "Dance, music, and skits were performed during the yearly cultural celebration.",
+      "image_url": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 5,
+      "title": "Health Camp Registration Desk",
+      "category": "Events",
+      "description": "Residents registering for free checkups.",
+      "uploaded_by": "Medical Volunteer Team",
+      "uploaded_at": "2026-02-05 09:30 AM",
+      "content": "Doctors and volunteers conducted blood pressure and diabetes screenings.",
+      "image_url": "https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 6,
+      "title": "Weekend Tree Plantation",
+      "category": "Events",
+      "description": "Residents planting saplings in open community spaces.",
+      "uploaded_by": "Green Club",
+      "uploaded_at": "2026-02-04 07:20 AM",
+      "content": "More than 80 saplings were planted with long-term maintenance commitments.",
+      "image_url": "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 7,
+      "title": "Diwali Lights Walk",
+      "category": "Festival",
+      "description": "Colorful decorations and rangoli around the community park.",
+      "uploaded_by": "Culture Committee",
+      "uploaded_at": "2026-01-30 07:45 PM",
+      "content": "Families gathered for an evening walk and festive lighting across all blocks.",
+      "image_url": "https://images.unsplash.com/photo-1600618528240-fb9fc964b853?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 8,
+      "title": "Holi Celebration Ground",
+      "category": "Festival",
+      "description": "Residents celebrating with music and colors.",
+      "uploaded_by": "Community Admin",
+      "uploaded_at": "2026-01-27 10:15 AM",
+      "content": "The Holi event included safe color zones, snacks, and children activities.",
+      "image_url": "https://images.unsplash.com/photo-1553856622-d1b352e9a211?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 9,
+      "title": "Ganesh Chaturthi Pandal",
+      "category": "Festival",
+      "description": "Decorated pandal setup by volunteers.",
+      "uploaded_by": "Festival Desk",
+      "uploaded_at": "2026-01-25 06:35 PM",
+      "content": "Community members collaborated on decoration and evening prayer arrangements.",
+      "image_url": "https://www.rentnhop.com/blogs/wp-content/uploads/2025/08/ganesh-chaturthi-Pandal.jpg"
+    },
+    {
+      "id": 10,
+      "title": "Inter-Block Cricket Match",
+      "category": "Sports",
+      "description": "Friendly match between Block A and Block C teams.",
+      "uploaded_by": "Sports Secretary",
+      "uploaded_at": "2026-01-22 05:00 PM",
+      "content": "A close final over match with strong participation from youth and senior residents.",
+      "image_url": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 11,
+      "title": "Morning Yoga Session",
+      "category": "Sports",
+      "description": "Open-air yoga activity in the central lawn.",
+      "uploaded_by": "Wellness Group",
+      "uploaded_at": "2026-01-20 06:10 AM",
+      "content": "Residents joined guided breathing and mobility sessions for general fitness.",
+      "image_url": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 12,
+      "title": "Kids Football League",
+      "category": "Sports",
+      "description": "Children participating in neighborhood football rounds.",
+      "uploaded_by": "Youth Sports Team",
+      "uploaded_at": "2026-01-19 04:40 PM",
+      "content": "Parents and coaches supported kids through training, warmups, and match play.",
+      "image_url": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 13,
+      "title": "New Year Stage Program",
+      "category": "Events",
+      "description": "Live music and countdown gathering.",
+      "uploaded_by": "Resident Council",
+      "uploaded_at": "2026-01-01 11:58 PM",
+      "content": "Residents welcomed the new year with performances and community announcements.",
+      "image_url": "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 14,
+      "title": "Merit Certificate Distribution",
+      "category": "Achievement & Awards",
+      "description": "Top-performing students receiving certificates.",
+      "uploaded_by": "School Liaison Group",
+      "uploaded_at": "2025-12-28 02:25 PM",
+      "content": "Certificates were awarded for academics, sports participation, and social service.",
+      "image_url": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": 15,
+      "title": "Community Food Festival",
+      "category": "Festival",
+      "description": "Food stalls and regional dishes hosted by residents.",
+      "uploaded_by": "Food Festival Team",
+      "uploaded_at": "2025-12-20 07:10 PM",
+      "content": "Families set up stalls featuring home-cooked dishes and seasonal specialties.",
+      "image_url": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80"
+    }
+  ]
+}

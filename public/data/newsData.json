@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Community Cleanliness Drive",
+    "description": "Residents came together for a cleanliness drive to promote hygiene and awareness.",
+    "content": "Residents from all age groups actively participated in the cleanliness drive. The initiative focused on cleanliness, waste management, and creating a healthier environment for everyone.",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "date": "10 Feb 2026"
+  },
+  {
+    "id": 2,
+    "title": "Local Business Meetup",
+    "description": "Entrepreneurs and shop owners gathered to discuss growth opportunities.",
+    "content": "Local business owners discussed collaboration opportunities, digital growth strategies, and future expansion plans during the meetup.",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "date": "08 Feb 2026"
+  },
+  {
+    "id": 3,
+    "title": "Blood Donation Camp",
+    "description": "Community organized a successful blood donation camp.",
+    "content": "The blood donation camp saw active participation from residents. Doctors and volunteers ensured a smooth and safe process.",
+    "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b",
+    "date": "05 Feb 2026"
+  }
+]

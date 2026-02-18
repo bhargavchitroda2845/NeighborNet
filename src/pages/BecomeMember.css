@@ -1,0 +1,185 @@
+.become-member-page {
+  position: relative;
+  overflow: hidden;
+  max-width: 980px;
+  margin: 28px auto;
+  padding: 28px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(14, 116, 144, 0.15), transparent 48%),
+    radial-gradient(circle at 92% 100%, rgba(245, 158, 11, 0.14), transparent 42%),
+    linear-gradient(150deg, #f8fafc, #f1f5f9 55%, #fff7ed);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.become-member-page::before,
+.become-member-page::after {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  filter: blur(36px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.become-member-page::before {
+  top: -90px;
+  left: -70px;
+  background: rgba(14, 116, 144, 0.24);
+}
+
+.become-member-page::after {
+  right: -90px;
+  bottom: -110px;
+  background: rgba(249, 115, 22, 0.2);
+}
+
+.become-member-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.become-member-page > .cursor-follow-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      290px circle at var(--mx, 50%) var(--my, 35%),
+      rgba(14, 116, 144, 0.2),
+      rgba(14, 116, 144, 0.08) 34%,
+      rgba(14, 116, 144, 0) 70%
+    ),
+    radial-gradient(
+      240px circle at calc(var(--mx, 50%) + 55px) calc(var(--my, 35%) - 20px),
+      rgba(249, 115, 22, 0.16),
+      rgba(249, 115, 22, 0.07) 36%,
+      rgba(249, 115, 22, 0) 72%
+    );
+  animation: memberCursorAura 3.5s ease-in-out infinite;
+}
+
+.become-member-page h1 {
+  margin: 0;
+  font-size: clamp(1.9rem, 3.6vw, 2.5rem);
+  letter-spacing: 0.3px;
+  color: #0f172a;
+}
+
+.become-member-subtitle {
+  margin: 8px 0 22px;
+  color: #334155;
+  line-height: 1.55;
+  max-width: 66ch;
+}
+
+.become-member-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.become-member-form label {
+  display: grid;
+  gap: 7px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.become-member-form input,
+.become-member-form select,
+.become-member-form textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.9);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.become-member-form input:focus,
+.become-member-form select:focus,
+.become-member-form textarea:focus {
+  outline: none;
+  border-color: #0e7490;
+  box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.15);
+  transform: translateY(-1px);
+}
+
+.become-member-form label:last-of-type {
+  grid-column: 1 / -1;
+}
+
+.become-member-form button {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 4px;
+  padding: 12px 18px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #0f172a, #0e7490);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.become-member-form button:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.become-member-success,
+.become-member-error {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.become-member-success {
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+}
+
+.become-member-error {
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+}
+
+@keyframes memberCursorAura {
+  0%,
+  100% {
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    filter: saturate(1.18) brightness(1.05);
+  }
+}
+
+@media (max-width: 800px) {
+  .become-member-page {
+    margin: 16px;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .become-member-form {
+    grid-template-columns: 1fr;
+  }
+}

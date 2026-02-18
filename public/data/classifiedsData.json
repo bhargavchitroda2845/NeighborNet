@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "2 BHK Flat for Sale",
+    "price": "₹45,00,000",
+    "category": "buy",
+    "location": "Ahmedabad",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "description": "Well furnished flat near metro station."
+  },
+  {
+    "id": 2,
+    "title": "Used iPhone 12",
+    "price": "₹35,000",
+    "category": "sell",
+    "location": "Gandhinagar",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "description": "Excellent condition, no scratches."
+  },
+  {
+    "id": 3,
+    "title": "1 BHK Flat on Rent",
+    "price": "₹10,000 / month",
+    "category": "rent",
+    "location": "Maninagar",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "description": "Family preferred, nearby market."
+  },
+  {
+    "id": 4,
+    "title": "Shop for Rent",
+    "price": "₹25,000 / month",
+    "category": "rent",
+    "location": "CG Road",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "description": "Prime business location."
+  },
+  {
+    "id": 5,
+    "title": "Second-hand Bike",
+    "price": "₹55,000",
+    "category": "sell",
+    "location": "Bopal",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "description": "Single owner, well maintained."
+  },
+  {
+    "id": 6,
+    "title": "Second-hand Bike",
+    "price": "₹55,000",
+    "category": "sell",
+    "location": "Bopal",
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "description": "Single owner, well maintained."
+  }
+]

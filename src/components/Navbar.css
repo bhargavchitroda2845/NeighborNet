@@ -1,0 +1,124 @@
+/* ==============================
+   NAVBAR BASE
+============================== */
+.navbar {
+  background-color: #222;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 9999; /* IMPORTANT */
+}
+
+.logo {
+  color: orange;
+  font-size: 22px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* ==============================
+   DESKTOP LINKS
+============================== */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-links li a:hover {
+  color: orange;
+}
+
+/* ==============================
+   3 DOT MENU ICON
+============================== */
+.menu-icon {
+  display: none;
+  font-size: 26px;
+  color: white;
+  cursor: pointer;
+}
+
+/* ==============================
+   MOBILE VIEW
+============================== */
+@media (max-width: 768px) {
+
+  .menu-icon {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;  /* 🔥 changed from absolute to fixed */
+    top: 65px;        /* adjust if navbar height changes */
+    right: 10px;
+    width: 220px;
+
+    background-color: #222;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+
+    z-index: 10000;   /* 🔥 VERY IMPORTANT */
+
+    /* animation */
+    opacity: 0;
+    transform: translateY(-15px);
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  .nav-links.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .nav-links li {
+    padding: 14px;
+    border-bottom: 1px solid #333;
+  }
+
+  .nav-links li:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ==============================
+   BUTTON STYLES
+============================== */
+.backend-link {
+  background-color: #16a34a;
+  padding: 6px 12px;
+  border-radius: 5px;
+}
+
+.backend-link:hover {
+  background-color: #15803d;
+}
+
+.backend-link.become-member {
+  background-color: #2563eb;
+}
+
+.backend-link.become-member:hover {
+  background-color: #1d4ed8;
+}
+
+.backend-link.admin {
+  background-color: #dc2626;
+}
+
+.backend-link.admin:hover {
+  background-color: #b91c1c;
+}

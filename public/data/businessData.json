@@ -1,0 +1,213 @@
+{
+  "categories": [
+    { "id": 1, "name": "Home & Building Work", "icon": "🏠" },
+    { "id": 2, "name": "Stitching, Tailoring & Hand Work", "icon": "👗" },
+    { "id": 3, "name": "Shops & Daily Needs", "icon": "🛒" },
+    { "id": 4, "name": "Food & Tiffin Services", "icon": "🍽️" },
+    { "id": 5, "name": "Vehicle & Transport Services", "icon": "🚗" },
+    { "id": 6, "name": "Computer, Mobile & Tech Services", "icon": "💻" },
+    { "id": 7, "name": "Health, Care & Wellness", "icon": "🧑‍⚕️" },
+    { "id": 8, "name": "Education & Training", "icon": "📚" },
+    { "id": 9, "name": "Events, Media & Creative Work", "icon": "🎉" },
+    { "id": 10, "name": "Personal & Local Services", "icon": "🧹" }
+  ],
+
+  "businesses": [
+    {
+      "id": 1,
+      "name": "Shree Civil Works",
+      "category": "Home & Building Work",
+      "service": "Civil Work",
+      "location": "Ahmedabad",
+      "phone": "9876543210",
+      "rating": 4.5,
+      "details": "House construction, RCC work, renovation, repair work",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+    {
+      "id": 2,
+      "name": "Raj Electrician",
+      "category": "Home & Building Work",
+      "service": "Electrician",
+      "location": "Surat",
+      "phone": "9876501234",
+      "rating": 4.2,
+      "details": "House wiring, switch repair, inverter & LED fitting",
+      "image": "https://images.unsplash.com/photo-1581090700227-1e37b190418e"
+    },
+    {
+      "id": 3,
+      "name": "Perfect Plumbing",
+      "category": "Home & Building Work",
+      "service": "Plumber",
+      "location": "Vadodara",
+      "phone": "9898989898",
+      "rating": 4.4,
+      "details": "Leakage fixing, bathroom fittings, water motor repair",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+
+    {
+      "id": 4,
+      "name": "Meera Tailors",
+      "category": "Stitching, Tailoring & Hand Work",
+      "service": "Ladies Tailor",
+      "location": "Ahmedabad",
+      "phone": "9988776655",
+      "rating": 4.6,
+      "details": "Blouse stitching, dress alteration, custom fitting",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+    {
+      "id": 5,
+      "name": "Royal Boutique",
+      "category": "Stitching, Tailoring & Hand Work",
+      "service": "Boutique",
+      "location": "Surat",
+      "phone": "9123456789",
+      "rating": 4.7,
+      "details": "Designer dresses, embroidery, wedding wear",
+      "image": "https://images.unsplash.com/photo-1521334884684-d80222895322"
+    },
+
+    {
+      "id": 6,
+      "name": "Patel Kirana Store",
+      "category": "Shops & Daily Needs",
+      "service": "Grocery Shop",
+      "location": "Rajkot",
+      "phone": "9000011111",
+      "rating": 4.3,
+      "details": "All daily grocery items, home delivery available",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+    {
+      "id": 7,
+      "name": "Shiv Medical",
+      "category": "Shops & Daily Needs",
+      "service": "Medical Store",
+      "location": "Ahmedabad",
+      "phone": "9888888888",
+      "rating": 4.5,
+      "details": "All medicines, surgical items, doctor prescriptions",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+
+    {
+      "id": 8,
+      "name": "Maa Tiffin Service",
+      "category": "Food & Tiffin Services",
+      "service": "Home Tiffin",
+      "location": "Ahmedabad",
+      "phone": "9090909090",
+      "rating": 4.8,
+      "details": "Pure veg home food, monthly lunch & dinner plans",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+    {
+      "id": 9,
+      "name": "Shree Catering",
+      "category": "Food & Tiffin Services",
+      "service": "Catering",
+      "location": "Surat",
+      "phone": "9345678901",
+      "rating": 4.4,
+      "details": "Marriage, party & function catering services",
+      "image": "https://images.unsplash.com/photo-1555243896-c709bfa0b564"
+    },
+
+    {
+      "id": 10,
+      "name": "City Cab Service",
+      "category": "Vehicle & Transport Services",
+      "service": "Cab Service",
+      "location": "Ahmedabad",
+      "phone": "9012345678",
+      "rating": 4.1,
+      "details": "Local & outstation cab service, airport pickup",
+      "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70"
+    },
+    {
+      "id": 11,
+      "name": "Fast Bike Repair",
+      "category": "Vehicle & Transport Services",
+      "service": "Bike Mechanic",
+      "location": "Surat",
+      "phone": "9555555555",
+      "rating": 4.3,
+      "details": "Bike servicing, puncture, engine repair",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+
+    {
+      "id": 12,
+      "name": "Mobile Care",
+      "category": "Computer, Mobile & Tech Services",
+      "service": "Mobile Repair",
+      "location": "Ahmedabad",
+      "phone": "9666666666",
+      "rating": 4.6,
+      "details": "Screen replacement, battery change, software issues",
+      "image": "https://images.unsplash.com/photo-1518770660439-4636190af475"
+    },
+    {
+      "id": 13,
+      "name": "WebTech Solutions",
+      "category": "Computer, Mobile & Tech Services",
+      "service": "Website Development",
+      "location": "Remote",
+      "phone": "9777777777",
+      "rating": 4.7,
+      "details": "Website, software & mobile app development",
+      "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c"
+    },
+
+    {
+      "id": 14,
+      "name": "Shree Clinic",
+      "category": "Health, Care & Wellness",
+      "service": "Clinic",
+      "location": "Vadodara",
+      "phone": "9444444444",
+      "rating": 4.5,
+      "details": "General physician, health checkups",
+      "image": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3"
+    },
+
+    {
+      "id": 15,
+      "name": "Bright Tuition",
+      "category": "Education & Training",
+      "service": "School Tuition",
+      "location": "Ahmedabad",
+      "phone": "9333333333",
+      "rating": 4.6,
+      "details": "Classes 1–10 tuition, maths & science",
+      "image": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"
+    },
+
+    {
+      "id": 16,
+      "name": "Dream Events",
+      "category": "Events, Media & Creative Work",
+      "service": "Event Decoration",
+      "location": "Surat",
+      "phone": "9222222222",
+      "rating": 4.7,
+      "details": "Wedding, birthday & corporate event decoration",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    },
+
+    {
+      "id": 17,
+      "name": "Quick Pest Control",
+      "category": "Personal & Local Services",
+      "service": "Pest Control",
+      "location": "Ahmedabad",
+      "phone": "9111111111",
+      "rating": 4.4,
+      "details": "Termite, cockroach & mosquito control",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+    }
+  ]
+}
