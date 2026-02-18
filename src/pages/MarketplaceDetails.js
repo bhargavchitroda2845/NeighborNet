@@ -230,18 +230,10 @@ function MarketplaceDetails() {
                       if (createdByRef.username) {
                         sessionStorage.setItem("member_profile_username", createdByRef.username);
                       }
-                      if (createdByRef.memberId !== null) {
-                        sessionStorage.setItem("member_profile_id", String(createdByRef.memberId));
-                      }
-                      sessionStorage.setItem("member_profile_name", createdByRef.name);
                       sessionStorage.removeItem("member_profile_source");
                       sessionStorage.removeItem("member_profile_listing_id");
 
                       const params = new URLSearchParams();
-                      params.set("full_name", createdByRef.name);
-                      if (createdByRef.memberId !== null) {
-                        params.set("id", String(createdByRef.memberId));
-                      }
                       if (createdByRef.username) {
                         params.set("username", createdByRef.username);
                       }

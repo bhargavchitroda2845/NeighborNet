@@ -98,21 +98,10 @@ function MemberDetails() {
 
       try {
         const resolvedUsername = memberUsernameFromQuery.trim();
-        const resolvedMemberId = memberId ? String(memberId).trim() : "";
-        const resolvedName = memberFullName.trim();
 
         const candidateParams = [];
         if (resolvedUsername) {
           candidateParams.push({ key: "username", value: resolvedUsername });
-        }
-        if (resolvedMemberId) {
-          candidateParams.push({ key: "id", value: resolvedMemberId });
-          candidateParams.push({ key: "member_no", value: resolvedMemberId });
-        }
-        if (resolvedName && resolvedName !== "Unknown Member") {
-          candidateParams.push({ key: "full_name", value: resolvedName });
-          candidateParams.push({ key: "name", value: resolvedName });
-          candidateParams.push({ key: "created_by_name", value: resolvedName });
         }
 
         if (candidateParams.length === 0) {
@@ -196,7 +185,7 @@ function MemberDetails() {
             <p className="member-error">{error}</p>
             <div className="member-info-grid">
               <p><strong>Name:</strong> {memberFullName}</p>
-              <p><strong>Member ID:</strong> {memberId || "Not provided"}</p>
+              {/* <p><strong>Member ID:</strong> {memberId || "Not provided"}</p> */}
               <p><strong>Username:</strong> {memberUsernameFromQuery || "Not provided"}</p>
             </div>
           </>

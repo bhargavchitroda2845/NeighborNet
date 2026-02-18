@@ -3,84 +3,22 @@ import { useEffect, useState } from "react";
 import "./NewsDetails.css";
 import { BASE_URL } from "../config/api";
 
-function getCreatedByName(newsItem) {
-  if (!newsItem) return "Unknown";
-
-  if (
-    typeof newsItem.created_by_profile?.full_name === "string" &&
-    newsItem.created_by_profile.full_name.trim()
-  ) {
-    return newsItem.created_by_profile.full_name.trim();
-  }
-
-  if (
-    typeof newsItem.created_by_name === "string" &&
-    newsItem.created_by_name.trim()
-  ) {
-    return newsItem.created_by_name.trim();
-  }
-
-  if (typeof newsItem.created_by === "string" && newsItem.created_by.trim()) {
-    return newsItem.created_by.trim();
-  }
-
-  if (newsItem.created_by && typeof newsItem.created_by === "object") {
-    const createdByObject =
-      newsItem.created_by.full_name ||
-      newsItem.created_by.name ||
-      newsItem.created_by.username;
-
-    if (typeof createdByObject === "string" && createdByObject.trim()) {
-      return createdByObject.trim();
-    }
-  }
-
-  const fallbackFields = [
-    newsItem.author_name,
-    newsItem.author,
-    newsItem.posted_by,
-    newsItem.user_name,
-    newsItem.username,
-  ];
-
-  for (const field of fallbackFields) {
-    if (typeof field === "string" && field.trim()) {
-      return field.trim();
-    }
-  }
-
-  return "Unknown";
-}
-
 function getCreatedByRef(newsItem) {
-  const name = getCreatedByName(newsItem);
-  if (!name || name === "Unknown") {
+  if (!newsItem) return null;
+
+  // Get the created_by_name field
+  const createdByName =
+    typeof newsItem.created_by_name === "string" && newsItem.created_by_name.trim()
+      ? newsItem.created_by_name.trim()
+      : null;
+
+  if (!createdByName) {
     return null;
   }
 
-  const idCandidates = [
-    newsItem?.created_by_profile?.member_no,
-    newsItem?.created_by_id,
-    newsItem?.user_id,
-    newsItem?.author_id,
-    newsItem?.created_by?.id,
-  ];
-  const usernameCandidates = [
-    newsItem?.created_by_profile?.username,
-    newsItem?.created_by_username,
-    newsItem?.username,
-    newsItem?.created_by?.username,
-  ];
-
-  const memberId = idCandidates.find((value) => value !== null && value !== undefined && value !== "");
-  const username = usernameCandidates.find(
-    (value) => typeof value === "string" && value.trim()
-  );
-
   return {
-    name,
-    memberId: memberId ?? null,
-    username: username ? username.trim() : null,
+    name: createdByName,
+    username: createdByName, // Use created_by_name as username for search
   };
 }
 
@@ -157,22 +95,22 @@ function NewsDetail() {
 
         setPreviousNews(
           data.previous_item ||
-            data.result?.previous_item ||
-            data.previous ||
-            data.prev ||
-            data.previous_news ||
-            data.result?.previous ||
-            data.result?.previous_news ||
-            null
+          data.result?.previous_item ||
+          data.previous ||
+          data.prev ||
+          data.previous_news ||
+          data.result?.previous ||
+          data.result?.previous_news ||
+          null
         );
         setNextNews(
           data.next_item ||
-            data.result?.next_item ||
-            data.next ||
-            data.next_news ||
-            data.result?.next ||
-            data.result?.next_news ||
-            null
+          data.result?.next_item ||
+          data.next ||
+          data.next_news ||
+          data.result?.next ||
+          data.result?.next_news ||
+          null
         );
         setLoading(false);
       })
@@ -229,15 +167,7 @@ function NewsDetail() {
               if (createdByRef.username) {
                 sessionStorage.setItem("member_profile_username", createdByRef.username);
               }
-              if (createdByRef.memberId !== null) {
-                sessionStorage.setItem("member_profile_id", String(createdByRef.memberId));
-              }
-              sessionStorage.setItem("member_profile_name", createdByRef.name);
               const params = new URLSearchParams();
-              params.set("full_name", createdByRef.name);
-              if (createdByRef.memberId !== null) {
-                params.set("id", String(createdByRef.memberId));
-              }
               if (createdByRef.username) {
                 params.set("username", createdByRef.username);
               }
