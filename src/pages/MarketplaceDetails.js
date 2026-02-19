@@ -84,6 +84,7 @@ function getCreatedByRef(item) {
     item.user_id,
     item.created_by?.id,
   ];
+
   const usernameCandidates = [
     item.created_by_profile?.username,
     item.created_by_username,
@@ -94,7 +95,10 @@ function getCreatedByRef(item) {
       : null,
   ];
 
-  const memberId = idCandidates.find((value) => value !== null && value !== undefined && value !== "");
+  const memberId = idCandidates.find(
+    (value) => value !== null && value !== undefined && value !== ""
+  );
+
   const username = usernameCandidates.find(
     (value) => typeof value === "string" && value.trim()
   );
@@ -114,6 +118,10 @@ function MarketplaceDetails() {
   const [previousItem, setPreviousItem] = useState(null);
   const [nextItem, setNextItem] = useState(null);
 
+  // ✅ Default Location (Ahmedabad)
+  const DEFAULT_LAT = 47.6041;
+  const DEFAULT_LNG = -122.329;
+
   useEffect(() => {
     setLoading(true);
 
@@ -130,7 +138,6 @@ function MarketplaceDetails() {
           (Array.isArray(result) ? result[0] : null) ||
           (Array.isArray(result?.results) ? result.results[0] : null);
 
-        // API can provide direct neighbors for detail navigation.
         setPreviousItem(result?.previous_item || null);
         setNextItem(result?.next_item || null);
         setItem(selected || null);
@@ -154,13 +161,17 @@ function MarketplaceDetails() {
     if (!item) return "";
     return normalizeListingType(item);
   }, [item]);
+
   const createdByRef = useMemo(() => getCreatedByRef(item), [item]);
+
+  // ✅ Use backend lat/lng if available else default
+  const latitude = item?.latitude || DEFAULT_LAT;
+  const longitude = item?.longitude || DEFAULT_LNG;
 
   const handlePointerMove = (event) => {
     const bounds = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - bounds.left;
     const y = event.clientY - bounds.top;
-
     event.currentTarget.style.setProperty("--mx", `${x}px`);
     event.currentTarget.style.setProperty("--my", `${y}px`);
   };
@@ -168,11 +179,9 @@ function MarketplaceDetails() {
   const handleTouchMove = (event) => {
     const touch = event.touches?.[0];
     if (!touch) return;
-
     const bounds = event.currentTarget.getBoundingClientRect();
     const x = touch.clientX - bounds.left;
     const y = touch.clientY - bounds.top;
-
     event.currentTarget.style.setProperty("--mx", `${x}px`);
     event.currentTarget.style.setProperty("--my", `${y}px`);
   };
@@ -204,22 +213,31 @@ function MarketplaceDetails() {
 
         <div className="marketplace-details-card">
           {item.image_url ? (
-            <img src={item.image_url} alt={item.title} className="marketplace-details-image" />
+            <img
+              src={item.image_url}
+              alt={item.title}
+              className="marketplace-details-image"
+            />
           ) : (
-            <div className="marketplace-details-image-empty" aria-hidden="true" />
+            <div
+              className="marketplace-details-image-empty"
+              aria-hidden="true"
+            />
           )}
 
           <div className="marketplace-details-content">
             <h1>{item.title}</h1>
-            <span className={`marketplace-type-chip ${listingType}`}>{listingLabel}</span>
+            <span className={`marketplace-type-chip ${listingType}`}>
+              {listingLabel}
+            </span>
 
             <div className="marketplace-details-grid">
-              {/* <p><strong>Slug:</strong> {item.slug || "N/A"}</p> */}
               <p><strong>Area:</strong> {item.area || "N/A"}</p>
               <p><strong>Contact:</strong> {item.contact || "N/A"}</p>
               <p><strong>Price:</strong> {item.price ? `Rs ${item.price}` : "N/A"}</p>
               <p><strong>Min Price:</strong> {item.min_price ? `Rs ${item.min_price}` : "N/A"}</p>
               <p><strong>Max Price:</strong> {item.max_price ? `Rs ${item.max_price}` : "N/A"}</p>
+
               <p>
                 <strong>Created By:</strong>{" "}
                 {createdByRef ? (
@@ -228,7 +246,10 @@ function MarketplaceDetails() {
                     className="author-link-btn"
                     onClick={() => {
                       if (createdByRef.username) {
-                        sessionStorage.setItem("member_profile_username", createdByRef.username);
+                        sessionStorage.setItem(
+                          "member_profile_username",
+                          createdByRef.username
+                        );
                       }
                       sessionStorage.removeItem("member_profile_source");
                       sessionStorage.removeItem("member_profile_listing_id");
@@ -246,15 +267,27 @@ function MarketplaceDetails() {
                   "N/A"
                 )}
               </p>
-              {/* <p><strong>Updated By:</strong> {item.updated_by || "N/A"}</p> */}
+
               <p><strong>Created At:</strong> {formatDateTime(item.created_at)}</p>
-              {/* <p><strong>Updated At:</strong> {formatDateTime(item.updated_at)}</p> */}
-              {/* <p><strong>Line No:</strong> {item.line_no ?? "N/A"}</p> */}
             </div>
 
             <div className="marketplace-description">
               <h3>Description</h3>
               <p>{item.desc || "No description available."}</p>
+            </div>
+
+            {/* ✅ Google Map Section */}
+            <div className="marketplace-map">
+              <h3>Location</h3>
+              <iframe
+                title="Marketplace Location"
+                width="100%"
+                height="350"
+                style={{ border: 0, borderRadius: "12px" }}
+                loading="lazy"
+                allowFullScreen
+                src={`https://www.google.com/maps?q=${latitude},${longitude}&z=14&output=embed`}
+              ></iframe>
             </div>
 
             <div className="marketplace-detail-nav">

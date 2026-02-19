@@ -55,10 +55,10 @@ function BecomeMember() {
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [recaptchaWidgetId, setRecaptchaWidgetId] = useState(null);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [countryCities, setCountryCities] = useState([]);
   const [loadingCountries, setLoadingCountries] = useState(false);
   const [loadingStates, setLoadingStates] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
@@ -85,6 +85,40 @@ function BecomeMember() {
     return () => controller.abort();
   }, []);
 
+  // Render reCAPTCHA widget when grecaptcha is available
+  useEffect(() => {
+    let mounted = true;
+
+    const renderRecaptcha = () => {
+      try {
+        if (!window?.grecaptcha) return false;
+        const el = document.getElementById("become-member-recaptcha");
+        if (!el) return false;
+        const id = window.grecaptcha.render("become-member-recaptcha", {
+          sitekey: "6LcR428sAAAAAGf8btT931wd2r9qWVnezAnJjA31",
+        });
+        if (mounted) setRecaptchaWidgetId(id);
+        return true;
+      } catch (e) {
+        // ignore render errors and retry
+        return false;
+      }
+    };
+
+    if (!renderRecaptcha()) {
+      const iv = setInterval(() => {
+        if (renderRecaptcha()) clearInterval(iv);
+      }, 500);
+      return () => {
+        mounted = false;
+        clearInterval(iv);
+      };
+    }
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   useEffect(() => {
     const selectedCountryId = toNumber(formData.country);
     if (!selectedCountryId) {
@@ -102,25 +136,14 @@ function BecomeMember() {
         const stateParams = new URLSearchParams();
         stateParams.set("country_id", String(selectedCountryId));
 
-        const cityParams = new URLSearchParams();
-        cityParams.set("country_id", String(selectedCountryId));
-
-        const [stateResponse, cityResponse] = await Promise.all([
+        const [stateResponse] = await Promise.all([
           fetch(`${MASTER_STATES_API_URL}?${stateParams.toString()}`, {
             signal: controller.signal,
           }),
-          fetch(`${MASTER_CITIES_API_URL}?${cityParams.toString()}`, {
-            signal: controller.signal,
-          }),
         ]);
 
-        const [stateData, cityData] = await Promise.all([
-          stateResponse.json(),
-          cityResponse.json(),
-        ]);
-
+        const stateData = await stateResponse.json();
         const stateResults = normalizeResults(stateData);
-        const cityResults = normalizeResults(cityData);
 
         const safeStates = stateResults.filter((state) => {
           const stateCountryId =
@@ -130,23 +153,12 @@ function BecomeMember() {
           return stateCountryId === selectedCountryId;
         });
 
-        const safeCitiesByCountry = cityResults.filter((city) => {
-          const cityCountryId =
-            resolveRefId(city.country_id) ??
-            resolveRefId(city.country) ??
-            resolveRefId(city.country_ref);
-          return cityCountryId === selectedCountryId;
-        });
-
         setStates(safeStates.length > 0 ? safeStates : stateResults);
-        const baseCountryCities = safeCitiesByCountry.length > 0 ? safeCitiesByCountry : cityResults;
-        setCountryCities(baseCountryCities);
-        setCities(baseCountryCities);
+        setCities([]);
       } catch (error) {
         if (error.name !== "AbortError") {
           console.error("States/Cities load error:", error);
           setStates([]);
-          setCountryCities([]);
           setCities([]);
         }
       } finally {
@@ -162,9 +174,9 @@ function BecomeMember() {
   useEffect(() => {
     const selectedStateId = toNumber(formData.state);
 
-    // If state is optional and not selected, show country-level cities.
+    // If state is not selected, don't load cities
     if (!selectedStateId) {
-      setCities(countryCities);
+      setCities([]);
       return;
     }
 
@@ -176,24 +188,22 @@ function BecomeMember() {
         const params = new URLSearchParams();
         params.set("state_id", String(selectedStateId));
 
-        const response = await fetch(`${MASTER_CITIES_API_URL}?${params.toString()}`, {
+        const url = `${MASTER_CITIES_API_URL}?${params.toString()}`;
+        console.log("Fetching cities from:", url);
+
+        const response = await fetch(url, {
           signal: controller.signal,
         });
         const data = await response.json();
+        console.log("Cities API response:", data);
+
         const results = normalizeResults(data);
+        console.log("Normalized results:", results);
 
-        const safeCitiesByState = results.filter((city) => {
-          const cityStateId =
-            resolveRefId(city.state_id) ??
-            resolveRefId(city.state) ??
-            resolveRefId(city.state_ref);
-          return cityStateId === selectedStateId;
-        });
-
-        setCities(safeCitiesByState.length > 0 ? safeCitiesByState : results);
+        setCities(results);
       } catch (error) {
         if (error.name !== "AbortError") {
-          console.error("State cities load error:", error);
+          console.error("Cities load error:", error);
           setCities([]);
         }
       } finally {
@@ -203,7 +213,7 @@ function BecomeMember() {
 
     fetchStateCities();
     return () => controller.abort();
-  }, [formData.state, countryCities]);
+  }, [formData.state]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -236,10 +246,10 @@ function BecomeMember() {
           safeTrim(formData.gender) === "male"
             ? "M"
             : safeTrim(formData.gender) === "female"
-            ? "F"
-            : safeTrim(formData.gender) === "other"
-            ? "O"
-            : safeTrim(formData.gender),
+              ? "F"
+              : safeTrim(formData.gender) === "other"
+                ? "O"
+                : safeTrim(formData.gender),
         country: safeTrim(formData.country),
         residential_address: safeTrim(formData.residential_address),
       };
@@ -257,6 +267,27 @@ function BecomeMember() {
           payload[key] = value;
         }
       });
+
+      // Get reCAPTCHA response token
+      try {
+        const grecaptcha = window?.grecaptcha;
+        const token = grecaptcha
+          ? typeof recaptchaWidgetId === "number"
+            ? grecaptcha.getResponse(recaptchaWidgetId)
+            : grecaptcha.getResponse()
+          : null;
+
+        if (!token) {
+          setErrorMessage("Please complete the CAPTCHA before submitting.");
+          setSubmitting(false);
+          return;
+        }
+
+        // include token in payload so backend (if implemented) can verify
+        payload["g-recaptcha-response"] = token;
+      } catch (e) {
+        console.warn("reCAPTCHA token error", e);
+      }
 
       const response = await fetch(BECOME_MEMBER_API_URL, {
         method: "POST",
@@ -284,6 +315,19 @@ function BecomeMember() {
 
       setSuccessMessage("Your request was submitted successfully.");
       setFormData(initialForm);
+
+      // reset captcha after successful submit
+      try {
+        if (window?.grecaptcha) {
+          if (typeof recaptchaWidgetId === "number") {
+            window.grecaptcha.reset(recaptchaWidgetId);
+          } else {
+            window.grecaptcha.reset();
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
     } catch (error) {
       setErrorMessage(error.message || "Unable to submit request.");
     } finally {
@@ -447,8 +491,8 @@ function BecomeMember() {
               {loadingStates
                 ? "Loading states..."
                 : formData.country
-                ? "Select State"
-                : "Select Country First"}
+                  ? "Select State"
+                  : "Select Country First"}
             </option>
             {states.map((state) => (
               <option key={state.id} value={state.id}>
@@ -464,26 +508,17 @@ function BecomeMember() {
             name="city"
             value={formData.city}
             onChange={handleChange}
-            disabled={!formData.country || loadingCities}
+            disabled={!formData.state || loadingCities}
+            required
           >
             <option value="">
               {loadingCities
                 ? "Loading cities..."
-                : formData.country
-                ? "Select City (Optional)"
-                : "Select Country First"}
+                : formData.state
+                  ? "Select City"
+                  : "Select State First"}
             </option>
-            {cities
-              .filter((city) => {
-                const selectedStateId = toNumber(formData.state);
-                if (!selectedStateId) return true;
-                const cityStateId =
-                  resolveRefId(city.state_id) ??
-                  resolveRefId(city.state) ??
-                  resolveRefId(city.state_ref);
-                return cityStateId === selectedStateId;
-              })
-              .map((city) => (
+            {cities.map((city) => (
               <option key={city.id} value={city.id}>
                 {getOptionLabel(city)}
               </option>
@@ -501,6 +536,8 @@ function BecomeMember() {
             required
           />
         </label>
+
+        <div id="become-member-recaptcha" style={{ margin: "12px 0" }} />
 
         <button type="submit" disabled={submitting}>
           {submitting ? "Submitting..." : "Submit Request"}
