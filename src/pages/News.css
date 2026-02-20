@@ -2,7 +2,7 @@
    MAIN PAGE
 ========================= */
 .news-page {
-  padding: 40px 60px;
+  padding: 40px 100px;
   background: linear-gradient(135deg, #f4f7fb, #eef2ff);
   min-height: 100vh;
   position: relative;
@@ -122,7 +122,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, 280px);
   justify-content: center;
-  gap: 25px;
+  gap: 50px;
 }
 
 
