@@ -24,15 +24,24 @@
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
   margin: 0;
   padding: 0;
+  align-items: center;
+}
+
+.nav-links li {
+  display: flex;
+  align-items: center;
 }
 
 .nav-links li a {
   color: white;
   text-decoration: none;
   transition: 0.3s;
+  white-space: nowrap;
 }
 
 .nav-links li a:hover {
@@ -59,8 +68,8 @@
   }
 
   .nav-links {
-    position: fixed;  /* 🔥 changed from absolute to fixed */
-    top: 65px;        /* adjust if navbar height changes */
+    position: fixed; /* 🔥 changed from absolute to fixed */
+    top: 65px; /* adjust if navbar height changes */
     right: 10px;
     width: 220px;
 
@@ -69,7 +78,7 @@
     border-radius: 8px;
     box-shadow: 0 15px 30px rgba(0,0,0,0.4);
 
-    z-index: 10000;   /* 🔥 VERY IMPORTANT */
+    z-index: 10000; /* 🔥 VERY IMPORTANT */
 
     /* animation */
     opacity: 0;
@@ -87,6 +96,8 @@
   .nav-links li {
     padding: 14px;
     border-bottom: 1px solid #333;
+    width: 100%;
+    justify-content: center;
   }
 
   .nav-links li:last-child {
@@ -99,8 +110,9 @@
 ============================== */
 .backend-link {
   background-color: #16a34a;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: 5px;
+  display: inline-block;
 }
 
 .backend-link:hover {
@@ -121,4 +133,42 @@
 
 .backend-link.admin:hover {
   background-color: #b91c1c;
+}
+
+.backend-link.member-login {
+  background-color: #16a34a;
+}
+
+.backend-link.member-login:hover {
+  background-color: #15803d;
+}
+
+.backend-link.profile-link {
+  background-color: #7c3aed;
+}
+
+.backend-link.profile-link:hover {
+  background-color: #6d28d9;
+}
+
+.logout-btn {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.logout-btn:hover {
+  background-color: #b91c1c;
+}
+
+.logout-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

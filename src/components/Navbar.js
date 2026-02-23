@@ -1,11 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./Navbar.css";
-import { ADMIN_URL, MEMBER_LOGIN_URL } from "../config/api";
+import { ADMIN_URL } from "../config/api";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, member, logout } = useAuth();
 
   const handleNewsClick = (e) => {
     e.preventDefault();
@@ -63,6 +65,12 @@ function Navbar() {
     });
   };
 
+  const handleLogout = async () => {
+    await logout();
+    setShowMenu(false);
+    navigate("/");
+  };
+
   return (
     <nav className="navbar">
       <Link to="/" className="logo">NeighborNet</Link>
@@ -83,35 +91,65 @@ function Navbar() {
         <li><Link to="/gallery" onClick={handleGalleryClick}>Gallery</Link></li>
         <li><Link to="/about" onClick={handleAboutClick}>About Us</Link></li>
         <li><Link to="/contact" onClick={handleContactClick}>Contact</Link></li>
-        <li>
-          <Link
-            to="/becomemember"
-            onClick={() => setShowMenu(false)}
-            className="backend-link become-member"
-          >
-            Become Member
-          </Link>
-        </li>
-         <li>
-          <a
-            href={MEMBER_LOGIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="backend-link"
-          >
-            Member Login
-          </a>
-        </li>
-        <li>
-          <a
-            href={ADMIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="backend-link admin"
-          >
-            Admin Login
-          </a>
-        </li>
+        
+        {/* Show Become Member only when NOT logged in */}
+        {!isAuthenticated && (
+          <li>
+            <Link
+              to="/becomemember"
+              onClick={() => setShowMenu(false)}
+              className="backend-link become-member"
+            >
+              Become Member
+            </Link>
+          </li>
+        )}
+        
+        {!isAuthenticated && (
+          <>
+            <li>
+              <Link
+                to="/member-login"
+                onClick={() => setShowMenu(false)}
+                className="backend-link member-login"
+              >
+                Member Login
+              </Link>
+            </li>
+            <li>
+              <a
+                href={ADMIN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="backend-link admin"
+              >
+                Admin Login
+              </a>
+            </li>
+          </>
+        )}
+        
+        {isAuthenticated && (
+          <>
+            <li>
+              <Link
+                to="/profile"
+                onClick={() => setShowMenu(false)}
+                className="backend-link profile-link"
+              >
+                Profile
+              </Link>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="backend-link logout-btn"
+              >
+                Logout
+              </button>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

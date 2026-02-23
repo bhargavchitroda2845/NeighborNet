@@ -1,11 +1,12 @@
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL?.trim() || "http://192.168.1.3:8000";
+  process.env.REACT_APP_API_BASE_URL?.trim() || "http://localhost:8000/";
 
 const normalizeBaseUrl = (value) => value.replace(/\/+$/, "");
 
 export const BASE_URL = normalizeBaseUrl(API_BASE_URL);
 export const PUBLIC_PROFILE_API_URL = `${BASE_URL}/api/public/profile/`;
 export const MEMBER_LOGIN_URL = `${BASE_URL}/member/login/`;
+export const MEMBER_PROFILE_API_URL = `${BASE_URL}/member/api/profile/`;
 export const ADMIN_URL = `${BASE_URL}/admin/`;
 export const BECOME_MEMBER_API_URL = `${BASE_URL}/member/api/members/create/`;
 export const MASTER_COUNTRIES_API_URL = `${BASE_URL}/api/master/countries/`;

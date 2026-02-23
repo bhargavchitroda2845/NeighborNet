@@ -16,34 +16,41 @@ import MatrimonialDetails from "./pages/MatrimonialDetails";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import BecomeMember from "./pages/BecomeMember";
+import MemberLogin from "./pages/MemberLogin";
+import Profile from "./pages/Profile";
+import { AuthProvider } from "./context/AuthContext";
 
 
 function App() {
   return (
-    <div className="app-shell">
-      <Navbar />
+    <AuthProvider>
+      <div className="app-shell">
+        <Navbar />
 
-      <main className="app-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/news/:slug" element={<NewsDetails />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/marketplace/:id" element={<MarketplaceDetails />} />
-          <Route path="/memberdetails" element={<MemberDetails />} />
-          <Route path="/business" element={<Business />} />
-          <Route path="/matrimonial" element={<Matrimonial />} />
-          <Route path="/matrimonial/:id" element={<MatrimonialDetails />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/becomemember" element={<BecomeMember />} />
+        <main className="app-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/news/:slug" element={<NewsDetails />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/marketplace/:id" element={<MarketplaceDetails />} />
+            <Route path="/memberdetails" element={<MemberDetails />} />
+            <Route path="/business" element={<Business />} />
+            <Route path="/matrimonial" element={<Matrimonial />} />
+            <Route path="/matrimonial/:id" element={<MatrimonialDetails />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/becomemember" element={<BecomeMember />} />
+            <Route path="/member-login" element={<MemberLogin />} />
+            <Route path="/profile" element={<Profile />} />
 
-        </Routes>
-      </main>
+          </Routes>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </AuthProvider>
   );
 }
 
