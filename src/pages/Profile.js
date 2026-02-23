@@ -8,9 +8,12 @@ function Profile() {
     const navigate = useNavigate();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+    console.log('Profile component - member:', member, 'isLoading:', isLoading);
+
     // Redirect if not logged in
     useEffect(() => {
         if (!isLoading && !member) {
+            console.log('Not authenticated, redirecting to login');
             navigate('/member-login');
         }
     }, [member, isLoading, navigate]);
@@ -26,12 +29,22 @@ function Profile() {
     }
 
     if (!member) {
-        return null;
+        return <div className="profile-loading">No member data. Redirecting...</div>;
     }
 
-    // The member data is nested inside 'member' property from login response
-    const memberData = member.member || member;
+    // The member data comes from login response or profile API
+    // Both structures have: {member, counts, latest_detail, ...}
+    // member.member contains the actual member info
+    const memberData = member?.member || member;
+
+    if (!memberData || typeof memberData !== 'object') {
+        console.error('Profile component error: Invalid member data', memberData);
+        return <div className="profile-loading">Error: Unable to load profile data. Please login again.</div>;
+    }
+
     const profileImageUrl = memberData.profile_image_url;
+
+    console.log('memberData:', memberData);
 
     return (
         <div className="profile-container">
@@ -45,9 +58,9 @@ function Profile() {
                     <div className="profile-picture-section">
                         <div className="profile-picture-container">
                             {profileImageUrl ? (
-                                <img 
-                                    src={profileImageUrl} 
-                                    alt="Profile" 
+                                <img
+                                    src={profileImageUrl}
+                                    alt="Profile"
                                     className="profile-picture"
                                 />
                             ) : (

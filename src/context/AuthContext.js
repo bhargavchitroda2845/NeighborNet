@@ -5,13 +5,62 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [member, setMember] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Removed automatic auth check on mount - users must explicitly log in
-    // This prevents auto-login from persistent Django sessions
+    // Check if user was logged in ONLY if sessionStorage indicates they were
+    // This allows refresh to keep login, but closing tab clears it
     useEffect(() => {
-        setIsLoading(false);
+        const checkAuthStatus = async () => {
+            // Only check auth if user was previously logged in this session
+            const wasLoggedIn = sessionStorage.getItem('memberSessionActive');
+
+            console.log('=== AuthContext checkAuthStatus called ===');
+            console.log('wasLoggedIn from sessionStorage:', wasLoggedIn);
+
+            if (!wasLoggedIn) {
+                console.log('No session found, skipping profile fetch');
+                setIsLoading(false);
+                return;
+            }
+
+            try {
+                console.log('Fetching profile from:', MEMBER_PROFILE_API_URL);
+                const response = await fetch(MEMBER_PROFILE_API_URL, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                console.log('Profile API response status:', response.status);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Profile API data received:', data);
+                    console.log('Member property:', data.member);
+                    setMember(data);
+                    console.log('Member state set to:', data);
+                    setError(null);
+                } else {
+                    console.error('Profile API failed with status:', response.status);
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    setMember(null);
+                    sessionStorage.removeItem('memberSessionActive');
+                }
+            } catch (err) {
+                console.error('Auth check error:', err);
+                setMember(null);
+                sessionStorage.removeItem('memberSessionActive');
+            } finally {
+                setIsLoading(false);
+                console.log('=== AuthContext checkAuthStatus finished ===');
+            }
+        };
+
+        checkAuthStatus();
     }, []);
 
     const login = useCallback(async (username, password) => {
@@ -48,6 +97,8 @@ export const AuthProvider = ({ children }) => {
                 // Use profile data from login response directly (no need for second API call)
                 console.log('Login successful, using profile from login response:', loginData);
                 setMember(loginData);
+                // Mark session as active so refresh keeps user logged in
+                sessionStorage.setItem('memberSessionActive', 'true');
                 return { success: true, data: loginData, message: loginData.message || 'Logged in' };
             } else {
                 setError(loginData.message || 'Login failed');
@@ -74,6 +125,8 @@ export const AuthProvider = ({ children }) => {
             console.error('Logout error:', err);
         } finally {
             setMember(null);
+            // Clear session flag when user logs out
+            sessionStorage.removeItem('memberSessionActive');
             setIsLoading(false);
         }
     }, []);

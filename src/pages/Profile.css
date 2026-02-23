@@ -1,30 +1,153 @@
 .profile-container {
   min-height: 80vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
   padding: 40px 20px;
+  animation: fadeIn 0.6s ease-out;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating background shapes */
+.profile-container::before,
+.profile-container::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  animation: floatBackground 8s ease-in-out infinite;
+  opacity: 0.1;
+}
+
+.profile-container::before {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  top: -100px;
+  right: -50px;
+}
+
+.profile-container::after {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  bottom: -50px;
+  left: -50px;
+  animation-delay: 2s;
+}
+
+@keyframes floatBackground {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) rotate(10deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .profile-content {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .profile-header {
   text-align: center;
   margin-bottom: 40px;
+  animation: slideInDown 0.7s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-header h1 {
   font-size: 36px;
   color: #333;
   margin: 0;
+  animation: fadeInDown 0.8s ease-out 0.1s;
+  position: relative;
+  display: inline-block;
+}
+
+/* Animated underline for h1 */
+.profile-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transform: translateX(-50%);
+  transition: width 0.5s ease;
+  border-radius: 2px;
+}
+
+.profile-header h1:hover::after {
+  width: 80%;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-card {
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  animation: slideInUp 0.8s ease-out 0.2s;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+}
+
+/* Card corner decoration */
+.profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, transparent 50%, rgba(102, 126, 234, 0.1) 50%);
+  z-index: 0;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Profile Picture Section */
@@ -35,6 +158,29 @@
   padding: 30px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient overlay */
+.profile-picture-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+  animation: gradientMove 4s ease-in-out infinite;
+}
+
+@keyframes gradientMove {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(10%, 10%);
+  }
 }
 
 .profile-picture-container {
@@ -49,6 +195,20 @@
   border: 4px solid white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   background-color: rgba(255, 255, 255, 0.2);
+  animation: scaleInRotate 0.8s ease-out 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes scaleInRotate {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 .profile-picture {
@@ -72,11 +232,31 @@
 
 .profile-name-section {
   flex: 1;
+  animation: slideInRight 0.8s ease-out 0.4s;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .profile-name-section h2 {
   margin: 0 0 5px 0;
   font-size: 28px;
+  transition: all 0.3s ease;
+}
+
+.profile-name-section h2:hover {
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
 }
 
 .profile-username {
@@ -93,6 +273,19 @@
   font-weight: 600;
   text-transform: uppercase;
   background-color: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
 }
 
 .status-badge.approved {
@@ -108,6 +301,50 @@
 .profile-section {
   padding: 30px;
   border-bottom: 1px solid #eee;
+  animation: fadeInUp 0.7s ease-out;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Section entrance decoration */
+.profile-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background: linear-gradient(180deg, #667eea, #764ba2);
+  transition: height 0.5s ease;
+}
+
+.profile-section:hover::before {
+  height: 100%;
+}
+
+.profile-section:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.profile-section:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.profile-section:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-section:last-of-type {
@@ -120,6 +357,26 @@
   margin: 0 0 20px 0;
   padding-bottom: 10px;
   border-bottom: 2px solid #667eea;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Icon for section headers */
+.profile-section h2::before {
+  content: '✦';
+  margin-right: 10px;
+  color: #667eea;
+  transition: all 0.3s ease;
+}
+
+.profile-section:hover h2::before {
+  color: #764ba2;
+  transform: rotate(180deg);
+}
+
+.profile-section h2:hover {
+  border-bottom-color: #764ba2;
+  color: #667eea;
 }
 
 .info-grid {
@@ -131,6 +388,60 @@
 .info-item {
   display: flex;
   flex-direction: column;
+  animation: fadeInUp 0.6s ease-out;
+  padding: 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover background effect */
+.info-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.info-item:hover::before {
+  opacity: 1;
+}
+
+.info-item:nth-child(1) { animation-delay: 0.1s; }
+.info-item:nth-child(2) { animation-delay: 0.2s; }
+.info-item:nth-child(3) { animation-delay: 0.3s; }
+.info-item:nth-child(4) { animation-delay: 0.4s; }
+.info-item:nth-child(5) { animation-delay: 0.5s; }
+.info-item:nth-child(6) { animation-delay: 0.6s; }
+
+.info-item:hover {
+  background-color: #f9f9f9;
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.15);
+}
+
+/* Animated border on hover */
+.info-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.info-item:hover::after {
+  width: 100%;
 }
 
 .info-item label {
@@ -139,6 +450,11 @@
   font-weight: 600;
   text-transform: uppercase;
   margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.info-item:hover label {
+  color: #667eea;
 }
 
 .info-item p {
@@ -146,6 +462,20 @@
   color: #333;
   margin: 0;
   word-break: break-word;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.info-item:hover p {
+  color: #667eea;
+}
+
+.info-item p {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+  word-break: break-word;
+  font-weight: 500;
 }
 
 .stats-grid {
@@ -161,13 +491,94 @@
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  transition: all 0.3s ease;
+  animation: floatIn 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Stat item shine effect */
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.stat-item:hover::before {
+  left: 100%;
+}
+
+/* Icon for stats */
+.stat-item::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: statPulse 2s ease-in-out infinite;
+}
+
+@keyframes statPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+}
+
+.stat-item:nth-child(1) { animation-delay: 0.2s; }
+.stat-item:nth-child(2) { animation-delay: 0.3s; }
+.stat-item:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stat-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
 }
 
 .stat-number {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 10px;
+  animation: countUp 1.5s ease-out 0.5s;
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .stat-label {
@@ -179,6 +590,20 @@
   padding: 30px;
   text-align: center;
   background-color: #f9f9f9;
+  animation: fadeInUp 0.8s ease-out 0.6s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Action buttons decoration */
+.profile-actions::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #667eea, #764ba2, transparent);
 }
 
 .logout-button {
@@ -190,13 +615,59 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button shine animation */
+.logout-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.logout-button:hover::before {
+  left: 100%;
 }
 
 .logout-button:hover:not(:disabled) {
   background: #b71c1c;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(211, 47, 47, 0.4);
+}
+
+/* Button ripple effect */
+.logout-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.logout-button:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+.logout-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
 }
 
 .logout-button:disabled {
@@ -211,6 +682,25 @@
   min-height: 80vh;
   font-size: 18px;
   color: #666;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.profile-loading::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border: 3px solid #667eea;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive design */
@@ -243,5 +733,11 @@
 
   .profile-name-section h2 {
     font-size: 24px;
+  }
+
+  .profile-container::before,
+  .profile-container::after {
+    width: 150px;
+    height: 150px;
   }
 }
