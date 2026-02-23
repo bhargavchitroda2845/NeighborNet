@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./MarketplaceDetails.css";
-import { BASE_URL } from "../config/api";
+import { BASE_URL, BID_PLACE_API_URL, BID_GET_API_URL, BID_MANAGE_API_URL } from "../config/api";
+import { useAuth } from "../context/AuthContext";
 
 function formatDateTime(value) {
   if (!value) return "N/A";
@@ -113,15 +114,28 @@ function getCreatedByRef(item) {
 function MarketplaceDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { member, isAuthenticated } = useAuth();
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [previousItem, setPreviousItem] = useState(null);
   const [nextItem, setNextItem] = useState(null);
 
+  // Bidding state
+  const [bids, setBids] = useState([]);
+  const [bidsLoading, setBidsLoading] = useState(false);
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [bidAmount, setBidAmount] = useState("");
+  const [bidMessage, setBidMessage] = useState("");
+  const [bidSubmitting, setBidSubmitting] = useState(false);
+  const [bidError, setBidError] = useState("");
+  const [bidSuccess, setBidSuccess] = useState("");
+  const [hasAlreadyBid, setHasAlreadyBid] = useState(false);
+
   // ✅ Default Location (Ahmedabad)
   const DEFAULT_LAT = 47.6041;
   const DEFAULT_LNG = -122.329;
 
+  // Fetch item details
   useEffect(() => {
     setLoading(true);
 
@@ -151,6 +165,114 @@ function MarketplaceDetails() {
         setLoading(false);
       });
   }, [id]);
+
+  // Fetch bids when item is loaded
+  useEffect(() => {
+    if (item && item.bidding_enabled) {
+      setBidsLoading(true);
+      fetch(BID_GET_API_URL(item.id), {
+        credentials: 'include',
+      })
+        .then(res => res.json())
+        .then(data => {
+          setBids(data.bids || []);
+          // Check if current user has already bid
+          if (member && data.bids) {
+            const userBid = data.bids.find(b =>
+              b.bidder && b.bidder.username === member.member?.username
+            );
+            setHasAlreadyBid(!!userBid);
+          }
+          setBidsLoading(false);
+        })
+        .catch(err => {
+          console.error("Error fetching bids:", err);
+          setBidsLoading(false);
+        });
+    }
+  }, [item, member]);
+
+  // Handle placing a bid
+  const handlePlaceBid = async (e) => {
+    e.preventDefault();
+    setBidError("");
+    setBidSuccess("");
+    setBidSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("item_id", item.id);
+      formData.append("bid_amount", bidAmount);
+      if (bidMessage) formData.append("message", bidMessage);
+
+      const response = await fetch(BID_PLACE_API_URL, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setBidSuccess(data.message);
+        setBidAmount("");
+        setBidMessage("");
+        // Refresh bids
+        const bidsRes = await fetch(BID_GET_API_URL(item.id), {
+          credentials: 'include',
+        });
+        const bidsData = await bidsRes.json();
+        setBids(bidsData.bids || []);
+        setTimeout(() => {
+          setShowBidModal(false);
+          setBidSuccess("");
+        }, 2000);
+      } else {
+        setBidError(data.detail || data.message || "Failed to place bid");
+      }
+    } catch (err) {
+      setBidError("An error occurred while placing bid");
+      console.error(err);
+    } finally {
+      setBidSubmitting(false);
+    }
+  };
+
+  // Handle accept/reject bid (for item owner)
+  const handleManageBid = async (bidId, action) => {
+    try {
+      const formData = new FormData();
+      formData.append("action", action);
+
+      const response = await fetch(BID_MANAGE_API_URL(bidId), {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh bids
+        const bidsRes = await fetch(BID_GET_API_URL(item.id), {
+          credentials: 'include',
+        });
+        const bidsData = await bidsRes.json();
+        setBids(bidsData.bids || []);
+      } else {
+        alert(data.detail || "Failed to manage bid");
+      }
+    } catch (err) {
+      console.error("Error managing bid:", err);
+      alert("An error occurred");
+    }
+  };
+
+  // Check if current user is the owner
+  const isOwner = useMemo(() => {
+    if (!member || !item || !item.created_by_profile) return false;
+    return member.member?.username === item.created_by_profile.username;
+  }, [member, item]);
 
   const listingLabel = useMemo(() => {
     if (!item) return "N/A";
@@ -184,6 +306,17 @@ function MarketplaceDetails() {
     const y = touch.clientY - bounds.top;
     event.currentTarget.style.setProperty("--mx", `${x}px`);
     event.currentTarget.style.setProperty("--my", `${y}px`);
+  };
+
+  const handleBidButtonClick = () => {
+    if (!isAuthenticated) {
+      // Store the intended URL to redirect back after login
+      const currentUrl = `/marketplace/${id}`;
+      sessionStorage.setItem('redirectAfterLogin', currentUrl);
+      navigate("/member-login");
+      return;
+    }
+    setShowBidModal(true);
   };
 
   if (loading) {
@@ -276,6 +409,70 @@ function MarketplaceDetails() {
               <p>{item.desc || "No description available."}</p>
             </div>
 
+            {/* Bidding Section */}
+            {item.bidding_enabled && (
+              <div className="bidding-section">
+                <h3>💰 Bidding</h3>
+
+                {!isOwner && !hasAlreadyBid && (
+                  <button 
+                    className="bid-button"
+                    onClick={handleBidButtonClick}
+                  >
+                    Place Bid
+                  </button>
+                )}
+
+                {hasAlreadyBid && (
+                  <p className="bid-already-placed">You have already placed a bid on this item</p>
+                )}
+
+                {isOwner && <p className="bid-owner-notice">This is your listing</p>}
+
+                {/* Bids List */}
+                <div className="bids-list">
+                  <h4>Current Bids ({bids.length})</h4>
+                  {bidsLoading ? (
+                    <p>Loading bids...</p>
+                  ) : bids.length === 0 ? (
+                    <p>No bids yet</p>
+                  ) : (
+                    <div className="bids-container">
+                      {bids.map((bid) => (
+                        <div key={bid.id} className={`bid-item bid-status-${bid.status}`}>
+                          <div className="bid-info">
+                            <span className="bid-amount">Rs {bid.bid_amount}</span>
+                            <span className="bid-bidder">{bid.bidder?.full_name || "Anonymous"}</span>
+                            <span className="bid-date">{formatDateTime(bid.created_at)}</span>
+                            {bid.message && <p className="bid-message">"{bid.message}"</p>}
+                          </div>
+                          {isOwner && bid.status === "pending" && (
+                            <div className="bid-actions">
+                              <button
+                                className="bid-accept-btn"
+                                onClick={() => handleManageBid(bid.id, "accept")}
+                              >
+                                Accept
+                              </button>
+                              <button
+                                className="bid-reject-btn"
+                                onClick={() => handleManageBid(bid.id, "reject")}
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          )}
+                          <span className={`bid-status-badge ${bid.status}`}>
+                            {bid.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* ✅ Google Map Section */}
             <div className="marketplace-map">
               <h3>Location</h3>
@@ -309,6 +506,72 @@ function MarketplaceDetails() {
           </div>
         </div>
       </div>
+
+      {/* Bid Modal */}
+      {showBidModal && (
+        <div className="bid-modal-overlay" onClick={() => setShowBidModal(false)}>
+          <div className="bid-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="bid-modal-header">
+              <h3>Place Your Bid</h3>
+              <button className="bid-modal-close" onClick={() => setShowBidModal(false)}>×</button>
+            </div>
+
+            {item.image_url && (
+              <div className="bid-modal-item">
+                <img src={item.image_url} alt={item.title} />
+                <div>
+                  <h4>{item.title}</h4>
+                  <p>Min: Rs {item.min_price || 0}</p>
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handlePlaceBid}>
+              <div className="bid-form-group">
+                <label>Your Bid Amount (Rs)</label>
+                <input
+                  type="number"
+                  value={bidAmount}
+                  onChange={(e) => setBidAmount(e.target.value)}
+                  placeholder={`Min: ${item.min_price || 0}`}
+                  required
+                  min={item.min_price || 1}
+                />
+              </div>
+
+              <div className="bid-form-group">
+                <label>Message (Optional)</label>
+                <textarea
+                  value={bidMessage}
+                  onChange={(e) => setBidMessage(e.target.value)}
+                  placeholder="Add a message to your bid..."
+                  rows={3}
+                />
+              </div>
+
+              {bidError && <div className="bid-error">{bidError}</div>}
+              {bidSuccess && <div className="bid-success">{bidSuccess}</div>}
+
+              <div className="bid-modal-actions">
+                <button
+                  type="button"
+                  className="bid-cancel-btn"
+                  onClick={() => setShowBidModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bid-submit-btn"
+                  disabled={bidSubmitting}
+                >
+                  {bidSubmitting ? "Submitting..." : "Submit Bid"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

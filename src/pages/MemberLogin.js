@@ -32,13 +32,20 @@ function MemberLogin() {
         const result = await login(username, password);
 
         if (result.success) {
-            // show backend message then redirect to home
+            // show backend message then redirect to stored URL or home
             try {
                 alert(result.message || 'Logged in');
             } catch (e) {
                 /* ignore alert failures */
             }
-            navigate('/');
+            // Check for redirect URL
+            const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+            if (redirectUrl) {
+                sessionStorage.removeItem('redirectAfterLogin');
+                navigate(redirectUrl);
+            } else {
+                navigate('/');
+            }
         } else {
             setError(result.message || 'Login failed. Please try again.');
         }
