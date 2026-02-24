@@ -130,6 +130,8 @@ function MarketplaceDetails() {
   const [bidError, setBidError] = useState("");
   const [bidSuccess, setBidSuccess] = useState("");
   const [hasAlreadyBid, setHasAlreadyBid] = useState(false);
+  const [hasWinner, setHasWinner] = useState(false);
+  const [winningBid, setWinningBid] = useState(null);
 
   // ✅ Default Location (Ahmedabad)
   const DEFAULT_LAT = 47.6041;
@@ -182,6 +184,15 @@ function MarketplaceDetails() {
               b.bidder && b.bidder.username === member.member?.username
             );
             setHasAlreadyBid(!!userBid);
+          }
+          // Check if there's a winner
+          const winner = data.bids.find(b => b.is_winner === true);
+          if (winner) {
+            setHasWinner(true);
+            setWinningBid(winner);
+          } else {
+            setHasWinner(false);
+            setWinningBid(null);
           }
           setBidsLoading(false);
         })
@@ -414,7 +425,19 @@ function MarketplaceDetails() {
               <div className="bidding-section">
                 <h3>💰 Bidding</h3>
 
-                {!isOwner && !hasAlreadyBid && (
+                {/* Show winner info if there's a winner */}
+                {hasWinner && winningBid && (
+                  <div className="winner-announcement">
+                    <span className="winner-badge">🏆 Winner Selected!</span>
+                    <p>
+                      <strong>{winningBid.bidder?.full_name || winningBid.bidder?.username || "Anonymous"}</strong> 
+                      {' '}has won with a bid of{' '}
+                      <strong>Rs {winningBid.bid_amount}</strong>
+                    </p>
+                  </div>
+                )}
+
+                {!isOwner && !hasAlreadyBid && !hasWinner && (
                   <button 
                     className="bid-button"
                     onClick={handleBidButtonClick}
@@ -425,6 +448,10 @@ function MarketplaceDetails() {
 
                 {hasAlreadyBid && (
                   <p className="bid-already-placed">You have already placed a bid on this item</p>
+                )}
+
+                {hasWinner && !isOwner && (
+                  <p className="bid-closed">Bidding is closed - a winner has been selected</p>
                 )}
 
                 {isOwner && <p className="bid-owner-notice">This is your listing</p>}
@@ -439,7 +466,7 @@ function MarketplaceDetails() {
                   ) : (
                     <div className="bids-container">
                       {bids.map((bid) => (
-                        <div key={bid.id} className={`bid-item bid-status-${bid.status}`}>
+                        <div key={bid.id} className={`bid-item bid-status-${bid.status} ${bid.is_winner ? 'winner' : ''}`}>
                           <div className="bid-info">
                             <span className="bid-amount">Rs {bid.bid_amount}</span>
                             <span className="bid-bidder">{bid.bidder?.full_name || "Anonymous"}</span>
@@ -463,7 +490,7 @@ function MarketplaceDetails() {
                             </div>
                           )}
                           <span className={`bid-status-badge ${bid.status}`}>
-                            {bid.status}
+                            {bid.is_winner ? "🏆 Winner" : bid.status}
                           </span>
                         </div>
                       ))}

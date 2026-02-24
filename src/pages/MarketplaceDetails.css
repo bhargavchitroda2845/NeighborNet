@@ -321,6 +321,46 @@
   border-radius: 6px;
 }
 
+.bid-closed {
+  color: #dc2626;
+  font-weight: 600;
+  font-style: italic;
+  margin: 10px 0;
+  padding: 10px 15px;
+  background: #fee2e2;
+  border-radius: 6px;
+}
+
+.winner-announcement {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, #fef9c3, #fde047);
+  border-radius: 8px;
+  border: 2px solid #eab308;
+}
+
+.winner-badge {
+  display: inline-block;
+  background: #ca8a04;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.winner-announcement p {
+  margin: 8px 0 0;
+  color: #713f12;
+  font-size: 15px;
+}
+
+.bid-item.winner {
+  border: 2px solid #eab308;
+  background: linear-gradient(135deg, #fef9c3, #fef08a);
+}
+
 .bids-list {
   margin-top: 20px;
 }
