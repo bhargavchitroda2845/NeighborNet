@@ -17,3 +17,6 @@ export const MASTER_CITIES_API_URL = `${BASE_URL}/api/master/cities/`;
 export const BID_PLACE_API_URL = `${BASE_URL}/api/bid/place/`;
 export const BID_GET_API_URL = (itemId) => `${BASE_URL}/api/marketplace/${itemId}/bids/`;
 export const BID_MANAGE_API_URL = (bidId) => `${BASE_URL}/api/bid/${bidId}/manage/`;
+
+// Marketplace APIs
+export const SOLD_COUNT_API_URL = `${BASE_URL}/api/marketplace/sold-count/`;

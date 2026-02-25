@@ -131,6 +131,7 @@
 .marketplace-type-chip.buyer { background: #16a34a; }
 .marketplace-type-chip.seller { background: #dc2626; }
 .marketplace-type-chip.rental { background: #2563eb; }
+.marketplace-type-chip.sold { background: #6b7280; }
 
 .marketplace-details-grid {
   display: grid;

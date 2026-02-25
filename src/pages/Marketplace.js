@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Marketplace.css";
-import { BASE_URL } from "../config/api";
+import { BASE_URL, SOLD_COUNT_API_URL } from "../config/api";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -18,7 +18,14 @@ const Marketplace = () => {
   const [hasPrevious, setHasPrevious] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [soldCount, setSoldCount] = useState(0);
   const getListingType = (item) => {
+    // If item status is sold, show it as sold regardless of listing_type
+    const itemStatus = String(item.status || "").trim().toLowerCase();
+    if (itemStatus === "sold") {
+      return "sold";
+    }
+
     const rawType = String(item.listing_type || item.category || "")
       .trim()
       .toLowerCase();
@@ -72,7 +79,12 @@ const Marketplace = () => {
         });
 
         if (category !== "all") {
-          params.set("category", category);
+          // When category is "sold", we need to filter by status, not listing_type
+          if (category === "sold") {
+            params.set("status", "sold");
+          } else {
+            params.set("category", category);
+          }
         }
 
         const query = appliedSearchQuery.trim();
@@ -135,6 +147,20 @@ const Marketplace = () => {
     setRefreshTrigger((prev) => prev + 1);
   }, [location.key, location.state]);
 
+  // Fetch sold count on load
+  useEffect(() => {
+    const fetchSoldCount = async () => {
+      try {
+        const res = await fetch(SOLD_COUNT_API_URL);
+        const data = await res.json();
+        setSoldCount(data.total_sold || 0);
+      } catch (err) {
+        console.error("Error fetching sold count:", err);
+      }
+    };
+    fetchSoldCount();
+  }, []);
+
   return (
     <div
       className="buysell-container"
@@ -151,6 +177,9 @@ const Marketplace = () => {
         <button onClick={() => setCategory("buyer")}>Buyers</button>
         <button onClick={() => setCategory("seller")}>Sellers</button>
         <button onClick={() => setCategory("rental")}>Rental</button>
+        <button onClick={() => setCategory("sold")}>
+          Sold {soldCount > 0 && <span className="category-count">({soldCount})</span>}
+        </button>
       </div>
 
       <div className="marketplace-search-wrap">

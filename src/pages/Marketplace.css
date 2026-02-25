@@ -122,6 +122,19 @@
   animation-delay: 0.26s;
 }
 
+.category-buttons button:nth-child(5) {
+  animation-delay: 0.33s;
+}
+
+.category-count {
+  background-color: #6b7280;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
 .marketplace-search-wrap {
   text-align: center;
   margin-bottom: 30px;
@@ -277,6 +290,10 @@
 
 .tag.rental {
   background-color: #2563eb;
+}
+
+.tag.sold {
+  background-color: #6b7280;
 }
 
 /* =========================
