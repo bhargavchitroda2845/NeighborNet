@@ -1,42 +1,106 @@
-import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import "./Gallery.css";
+import { GALLERY_ALBUMS_API_URL, BASE_URL } from "../config/api";
 
 const PAGE_SIZE = 12;
 
 function Gallery() {
   const location = useLocation();
-  const [categories, setCategories] = useState([]);
-  const [photos, setPhotos] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const [albums, setAlbums] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [page, setPage] = useState(1);
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
-  useEffect(() => {
-    fetch("/data/galleryData.json")
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data.categories || []);
-        setPhotos(data.photos || []);
-      })
-      .catch((err) => console.error("Error loading gallery data", err));
+  const fetchAlbums = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(GALLERY_ALBUMS_API_URL);
+      const data = await response.json();
+      
+      if (data.results) {
+        setAlbums(data.results);
+      } else {
+        setAlbums([]);
+      }
+      setError(null);
+    } catch (err) {
+      console.error("Error loading gallery data", err);
+      setError("Failed to load gallery");
+      setAlbums([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const filteredPhotos = useMemo(() => {
-    if (selectedCategory === "all") {
-      return photos;
-    }
-    return photos.filter((photo) => photo.category === selectedCategory);
-  }, [photos, selectedCategory]);
+  useEffect(() => {
+    fetchAlbums();
+  }, [fetchAlbums]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredPhotos.length / PAGE_SIZE));
+  // Handle URL slug parameter - select album based on URL
+  useEffect(() => {
+    if (slug && albums.length > 0) {
+      const album = albums.find(a => a.slug === slug);
+      if (album) {
+        setSelectedAlbum(album);
+      }
+    } else if (!slug) {
+      setSelectedAlbum(null);
+    }
+  }, [slug, albums]);
+
+  // Handle album selection - update URL
+  const handleAlbumSelect = useCallback((album) => {
+    setSelectedAlbum(album);
+    setPage(1);
+    setLightboxIndex(null);
+    if (album) {
+      navigate(`/gallery/${album.slug}`, { replace: true });
+    } else {
+      navigate('/gallery', { replace: true });
+    }
+  }, [navigate]);
+
+  // Get all images from all albums for the grid view
+  const allImages = useMemo(() => {
+    const images = [];
+    albums.forEach((album) => {
+      if (album.images && album.images.length > 0) {
+        album.images.forEach((img) => {
+          images.push({
+            ...img,
+            albumTitle: album.title,
+            albumSlug: album.slug,
+            coverImageUrl: album.cover_image_url,
+          });
+        });
+      } else if (album.cover_image_url) {
+        // If album has no images but has cover, show cover as single image
+        images.push({
+          id: album.id,
+          image_url: album.cover_image_url,
+          title: album.title,
+          albumTitle: album.title,
+          albumSlug: album.slug,
+          coverImageUrl: album.cover_image_url,
+        });
+      }
+    });
+    return images;
+  }, [albums]);
+
+  const totalPages = Math.max(1, Math.ceil(allImages.length / PAGE_SIZE));
   const pageStart = (page - 1) * PAGE_SIZE;
-  const currentPagePhotos = filteredPhotos.slice(pageStart, pageStart + PAGE_SIZE);
+  const currentPageImages = allImages.slice(pageStart, pageStart + PAGE_SIZE);
 
   useEffect(() => {
     setPage(1);
-    setActiveIndex(null);
-  }, [selectedCategory]);
+    setLightboxIndex(null);
+  }, [selectedAlbum]);
 
   useEffect(() => {
     if (page > totalPages) {
@@ -49,43 +113,44 @@ function Gallery() {
       return;
     }
 
-    setSelectedCategory("all");
+    fetchAlbums();
+    setSelectedAlbum(null);
     setPage(1);
-    setActiveIndex(null);
-  }, [location.key, location.state]);
+    setLightboxIndex(null);
+  }, [location.key, location.state, fetchAlbums]);
 
   useEffect(() => {
-    if (activeIndex === null) {
+    if (lightboxIndex === null) {
       return;
     }
 
-    if (activeIndex < 0 || activeIndex >= filteredPhotos.length) {
-      setActiveIndex(null);
+    if (lightboxIndex < 0 || lightboxIndex >= allImages.length) {
+      setLightboxIndex(null);
     }
-  }, [activeIndex, filteredPhotos]);
+  }, [lightboxIndex, allImages]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (activeIndex === null) {
+      if (lightboxIndex === null) {
         return;
       }
 
       if (event.key === "Escape") {
-        setActiveIndex(null);
+        setLightboxIndex(null);
       }
 
       if (event.key === "ArrowLeft") {
-        if (filteredPhotos.length > 0) {
-          setActiveIndex((prev) =>
-            prev === null ? null : (prev - 1 + filteredPhotos.length) % filteredPhotos.length
+        if (allImages.length > 0) {
+          setLightboxIndex((prev) =>
+            prev === null ? null : (prev - 1 + allImages.length) % allImages.length
           );
         }
       }
 
       if (event.key === "ArrowRight") {
-        if (filteredPhotos.length > 0) {
-          setActiveIndex((prev) =>
-            prev === null ? null : (prev + 1) % filteredPhotos.length
+        if (allImages.length > 0) {
+          setLightboxIndex((prev) =>
+            prev === null ? null : (prev + 1) % allImages.length
           );
         }
       }
@@ -93,95 +158,165 @@ function Gallery() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeIndex, filteredPhotos.length]);
+  }, [lightboxIndex, allImages.length]);
 
   const goToPrevious = () => {
-    if (filteredPhotos.length === 0) {
+    if (allImages.length === 0) {
       return;
     }
-    setActiveIndex((prev) =>
-      prev === null ? null : (prev - 1 + filteredPhotos.length) % filteredPhotos.length
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev - 1 + allImages.length) % allImages.length
     );
   };
 
   const goToNext = () => {
-    if (filteredPhotos.length === 0) {
+    if (allImages.length === 0) {
       return;
     }
-    setActiveIndex((prev) =>
-      prev === null ? null : (prev + 1) % filteredPhotos.length
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev + 1) % allImages.length
     );
   };
 
-  const activePhoto = activeIndex === null ? null : filteredPhotos[activeIndex];
+  const activeImage = lightboxIndex === null ? null : allImages[lightboxIndex];
+
+  if (loading) {
+    return (
+      <div className="gallery-page">
+        <div className="gallery-header">
+          <h1>Community Gallery</h1>
+        </div>
+        <div className="gallery-loading">
+          <p>Loading gallery...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="gallery-page">
+        <div className="gallery-header">
+          <h1>Community Gallery</h1>
+        </div>
+        <div className="gallery-error">
+          <p>{error}</p>
+          <button onClick={fetchAlbums} className="btn btn-primary">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="gallery-page">
       <div className="gallery-header">
         <h1>Community Gallery</h1>
-        <div className="gallery-filter">
-          <label htmlFor="gallery-category">Category</label>
-          <select
-            id="gallery-category"
-            value={selectedCategory}
-            onChange={(event) => setSelectedCategory(event.target.value)}
+        {selectedAlbum && (
+          <button 
+            className="btn btn-secondary"
+            onClick={() => handleAlbumSelect(null)}
           >
-            <option value="all">All Categories</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="gallery-grid">
-        {currentPagePhotos.length === 0 ? (
-          <p className="gallery-empty">No images found.</p>
-        ) : (
-          currentPagePhotos.map((photo, index) => (
-            <button
-              key={photo.id}
-              type="button"
-              className="gallery-card"
-              style={{ "--index": index }}
-              onClick={() => setActiveIndex(pageStart + index)}
-            >
-              <img src={photo.image_url} alt={photo.title} loading="lazy" />
-              <span className="gallery-card-title">{photo.title}</span>
-            </button>
-          ))
+            Back to All Albums
+          </button>
         )}
       </div>
 
-      <div className="gallery-pagination">
-        <button
-          type="button"
-          disabled={page <= 1}
-          onClick={() => setPage((prev) => prev - 1)}
-        >
-          Previous
-        </button>
-        <span>
-          Page {page} of {totalPages}
-        </span>
-        <button
-          type="button"
-          disabled={page >= totalPages}
-          onClick={() => setPage((prev) => prev + 1)}
-        >
-          Next
-        </button>
-      </div>
+      {/* Album Cards View */}
+      {!selectedAlbum && (
+        <>
+          {albums.length === 0 ? (
+            <p className="gallery-empty">No albums found.</p>
+          ) : (
+            <div className="gallery-grid">
+              {albums.map((album, index) => (
+                <button
+                  key={album.id}
+                  type="button"
+                  className="gallery-card"
+                  style={{ "--index": index }}
+                  onClick={() => handleAlbumSelect(album)}
+                >
+                  <img 
+                    src={album.cover_image_url || `${BASE_URL}/static/assets_members/adminlte/dist/img/user2-160x160.jpg`} 
+                    alt={album.title} 
+                    loading="lazy" 
+                  />
+                  <span className="gallery-card-title">{album.title}</span>
+                  <span className="gallery-card-count">{album.image_count} photos</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </>
+      )}
 
-      {activePhoto && (
-        <div className="lightbox-backdrop" onClick={() => setActiveIndex(null)}>
+      {/* Single Album View */}
+      {selectedAlbum && (
+        <>
+          <div className="album-header">
+            <h2>{selectedAlbum.title}</h2>
+            {selectedAlbum.description && (
+              <p>{selectedAlbum.description}</p>
+            )}
+            <small className="text-muted">
+              By {selectedAlbum.created_by_name} | {selectedAlbum.image_count} photos
+            </small>
+          </div>
+
+          {selectedAlbum.images && selectedAlbum.images.length > 0 ? (
+            <div className="gallery-grid">
+              {selectedAlbum.images.map((img, index) => (
+                <button
+                  key={img.id}
+                  type="button"
+                  className="gallery-card"
+                  style={{ "--index": index }}
+                  onClick={() => setLightboxIndex(index)}
+                >
+                  <img src={img.image_url} alt={img.title || selectedAlbum.title} loading="lazy" />
+                  {img.title && <span className="gallery-card-title">{img.title}</span>}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="gallery-empty">No images in this album yet.</p>
+          )}
+        </>
+      )}
+
+      {/* Pagination */}
+      {allImages.length > PAGE_SIZE && (
+        <div className="gallery-pagination">
+          <button
+            type="button"
+            disabled={page <= 1}
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            Previous
+          </button>
+          <span>
+            Page {page} of {totalPages}
+          </span>
+          <button
+            type="button"
+            disabled={page >= totalPages}
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {activeImage && (
+        <div className="lightbox-backdrop" onClick={() => setLightboxIndex(null)}>
           <div className="lightbox-content" onClick={(event) => event.stopPropagation()}>
             <button
               type="button"
               className="lightbox-close"
-              onClick={() => setActiveIndex(null)}
+              onClick={() => setLightboxIndex(null)}
               aria-label="Close image viewer"
             >
               x
@@ -194,7 +329,7 @@ function Gallery() {
             >
               {"<"}
             </button>
-            <img src={activePhoto.image_url} alt={activePhoto.title} className="lightbox-image" />
+            <img src={activeImage.image_url} alt={activeImage.title} className="lightbox-image" />
             <button
               type="button"
               className="lightbox-nav right"
@@ -205,12 +340,13 @@ function Gallery() {
             </button>
 
             <div className="lightbox-meta">
-              <h3>{activePhoto.title}</h3>
-              <p><strong>Category:</strong> {activePhoto.category}</p>
-              <p><strong>Uploaded by:</strong> {activePhoto.uploaded_by}</p>
-              <p><strong>Time:</strong> {activePhoto.uploaded_at}</p>
-              <p><strong>Description:</strong> {activePhoto.description}</p>
-              <p>{activePhoto.content}</p>
+              <h3>{activeImage.title || selectedAlbum?.title || "Untitled"}</h3>
+              {activeImage.albumTitle && (
+                <p><strong>Album:</strong> {activeImage.albumTitle}</p>
+              )}
+              {activeImage.description && (
+                <p><strong>Description:</strong> {activeImage.description}</p>
+              )}
             </div>
           </div>
         </div>

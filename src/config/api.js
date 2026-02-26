@@ -20,3 +20,9 @@ export const BID_MANAGE_API_URL = (bidId) => `${BASE_URL}/api/bid/${bidId}/manag
 
 // Marketplace APIs
 export const SOLD_COUNT_API_URL = `${BASE_URL}/api/marketplace/sold-count/`;
+
+// Gallery APIs
+export const GALLERY_ALBUMS_API_URL = `${BASE_URL}/gallery/api/all/`;
+export const GALLERY_MY_ALBUMS_API_URL = `${BASE_URL}/gallery/api/my/`;
+export const GALLERY_CREATE_ALBUM_API_URL = `${BASE_URL}/gallery/api/create/`;
+export const GALLERY_ADMIN_PENDING_API_URL = `${BASE_URL}/gallery/api/admin/pending/`;
