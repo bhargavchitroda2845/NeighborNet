@@ -26,3 +26,8 @@ export const GALLERY_ALBUMS_API_URL = `${BASE_URL}/gallery/api/all/`;
 export const GALLERY_MY_ALBUMS_API_URL = `${BASE_URL}/gallery/api/my/`;
 export const GALLERY_CREATE_ALBUM_API_URL = `${BASE_URL}/gallery/api/create/`;
 export const GALLERY_ADMIN_PENDING_API_URL = `${BASE_URL}/gallery/api/admin/pending/`;
+
+// Business APIs
+export const BUSINESS_LIST_API_URL = `${BASE_URL}/business/all/`;
+export const BUSINESS_CATEGORIES_API_URL = `${BASE_URL}/business/categories/`;
+export const BUSINESS_DETAIL_API_URL = `${BASE_URL}/business/all/`;

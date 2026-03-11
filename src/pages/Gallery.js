@@ -19,7 +19,9 @@ function Gallery() {
   const fetchAlbums = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(GALLERY_ALBUMS_API_URL);
+      const response = await fetch(GALLERY_ALBUMS_API_URL, {
+        credentials: "include", 
+      });
       const data = await response.json();
       
       if (data.results) {
@@ -119,15 +121,18 @@ function Gallery() {
     setLightboxIndex(null);
   }, [location.key, location.state, fetchAlbums]);
 
+  // Determine which image array the lightbox should loop over
+  const currentViewImages = selectedAlbum ? (selectedAlbum.images || []) : allImages;
+
   useEffect(() => {
     if (lightboxIndex === null) {
       return;
     }
 
-    if (lightboxIndex < 0 || lightboxIndex >= allImages.length) {
+    if (lightboxIndex < 0 || lightboxIndex >= currentViewImages.length) {
       setLightboxIndex(null);
     }
-  }, [lightboxIndex, allImages]);
+  }, [lightboxIndex, currentViewImages]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -140,17 +145,17 @@ function Gallery() {
       }
 
       if (event.key === "ArrowLeft") {
-        if (allImages.length > 0) {
+        if (currentViewImages.length > 0) {
           setLightboxIndex((prev) =>
-            prev === null ? null : (prev - 1 + allImages.length) % allImages.length
+            prev === null ? null : (prev - 1 + currentViewImages.length) % currentViewImages.length
           );
         }
       }
 
       if (event.key === "ArrowRight") {
-        if (allImages.length > 0) {
+        if (currentViewImages.length > 0) {
           setLightboxIndex((prev) =>
-            prev === null ? null : (prev + 1) % allImages.length
+            prev === null ? null : (prev + 1) % currentViewImages.length
           );
         }
       }
@@ -158,27 +163,27 @@ function Gallery() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [lightboxIndex, allImages.length]);
+  }, [lightboxIndex, currentViewImages.length]);
 
   const goToPrevious = () => {
-    if (allImages.length === 0) {
+    if (currentViewImages.length === 0) {
       return;
     }
     setLightboxIndex((prev) =>
-      prev === null ? null : (prev - 1 + allImages.length) % allImages.length
+      prev === null ? null : (prev - 1 + currentViewImages.length) % currentViewImages.length
     );
   };
 
   const goToNext = () => {
-    if (allImages.length === 0) {
+    if (currentViewImages.length === 0) {
       return;
     }
     setLightboxIndex((prev) =>
-      prev === null ? null : (prev + 1) % allImages.length
+      prev === null ? null : (prev + 1) % currentViewImages.length
     );
   };
 
-  const activeImage = lightboxIndex === null ? null : allImages[lightboxIndex];
+  const activeImage = lightboxIndex === null ? null : currentViewImages[lightboxIndex];
 
   if (loading) {
     return (
@@ -209,8 +214,35 @@ function Gallery() {
     );
   }
 
+  const handlePointerMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - bounds.left;
+    const y = event.clientY - bounds.top;
+
+    event.currentTarget.style.setProperty("--mx", `${x}px`);
+    event.currentTarget.style.setProperty("--my", `${y}px`);
+  };
+
+  const handleTouchMove = (event) => {
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = touch.clientX - bounds.left;
+    const y = touch.clientY - bounds.top;
+
+    event.currentTarget.style.setProperty("--mx", `${x}px`);
+    event.currentTarget.style.setProperty("--my", `${y}px`);
+  };
+
   return (
-    <div className="gallery-page">
+    <div 
+      className="gallery-page"
+      onMouseMove={handlePointerMove}
+      onTouchStart={handleTouchMove}
+      onTouchMove={handleTouchMove}
+    >
+      <div className="cursor-follow-glow" aria-hidden="true" />
       <div className="gallery-header">
         <h1>Community Gallery</h1>
         {selectedAlbum && (
@@ -244,7 +276,6 @@ function Gallery() {
                     loading="lazy" 
                   />
                   <span className="gallery-card-title">{album.title}</span>
-                  <span className="gallery-card-count">{album.image_count} photos</span>
                 </button>
               ))}
             </div>
@@ -261,7 +292,7 @@ function Gallery() {
               <p>{selectedAlbum.description}</p>
             )}
             <small className="text-muted">
-              By {selectedAlbum.created_by_name} | {selectedAlbum.image_count} photos
+              By {selectedAlbum.created_by_name}
             </small>
           </div>
 

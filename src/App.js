@@ -11,6 +11,7 @@ import Marketplace from "./pages/Marketplace";
 import MarketplaceDetails from "./pages/MarketplaceDetails";
 import MemberDetails from "./pages/MemberDetails";
 import Business from "./pages/Business";
+import BusinessDetails from "./pages/BusinessDetails";
 import Matrimonial from "./pages/Matrimonial";
 import MatrimonialDetails from "./pages/MatrimonialDetails";
 import Gallery from "./pages/Gallery";
@@ -36,7 +37,8 @@ function App() {
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/marketplace/:id" element={<MarketplaceDetails />} />
             <Route path="/memberdetails" element={<MemberDetails />} />
-            <Route path="/business" element={<Business />} />
+<Route path="/business" element={<Business />} />
+            <Route path="/business/:slug" element={<BusinessDetails />} />
             <Route path="/matrimonial" element={<Matrimonial />} />
             <Route path="/matrimonial/:id" element={<MatrimonialDetails />} />
             <Route path="/gallery" element={<Gallery />} />

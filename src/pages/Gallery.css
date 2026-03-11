@@ -7,10 +7,45 @@
   --accent: #006d77;
   --accent-strong: #00545c;
   min-height: 100vh;
-  padding: 28px;
-  background: linear-gradient(135deg, #f9fbfd 0%, #eef3f6 100%);
+  padding: 40px 100px; /* Matched other pages */
+  background: linear-gradient(135deg, #f4f7fb, #eef2ff, #fce7f3, #e0e7ff);
+  background-size: 300% 300%;
   color: var(--text);
-  animation: pageFade 0.5s ease;
+  animation: pageFade 0.5s ease, bgGradientShift 12s ease infinite;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.gallery-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.gallery-page > .cursor-follow-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      320px circle at var(--mx, 50%) var(--my, 30%),
+      rgba(56, 189, 248, 0.24),
+      rgba(56, 189, 248, 0.1) 34%,
+      rgba(56, 189, 248, 0) 68%
+    ),
+    radial-gradient(
+      260px circle at calc(var(--mx, 50%) + 60px) calc(var(--my, 30%) - 30px),
+      rgba(244, 114, 182, 0.2),
+      rgba(244, 114, 182, 0.08) 36%,
+      rgba(244, 114, 182, 0) 72%
+    );
+  animation: cursorAura 3.6s ease-in-out infinite;
+}
+
+@keyframes cursorAura {
+  0%, 100% { filter: saturate(1) brightness(1); }
+  50% { filter: saturate(1.2) brightness(1.05); }
 }
 
 .gallery-header {
@@ -27,6 +62,13 @@
 .gallery-header h1 {
   margin: 0;
   font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4f46e5, #ec4899, #f59e0b, #4f46e5);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textGradientShift 8s ease infinite;
 }
 
 .gallery-filter {
@@ -47,6 +89,29 @@
   background: var(--surface);
 }
 
+.album-header {
+  text-align: center;
+  margin-bottom: 30px;
+  animation: slideDown 0.5s ease;
+}
+
+.album-header h2 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4f46e5, #ec4899, #f59e0b, #4f46e5);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textGradientShift 8s ease infinite;
+}
+
+.album-header p {
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
 .gallery-grid {
   max-width: 1200px;
   margin: 0 auto;
@@ -64,7 +129,7 @@
   cursor: pointer;
   text-align: left;
   padding: 0;
-  transition: transform 0.24s ease, box-shadow 0.24s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
   opacity: 0;
   transform: translateY(14px) scale(0.98);
   animation: cardIn 0.45s ease forwards;
@@ -72,8 +137,9 @@
 }
 
 .gallery-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 20px rgba(16, 24, 40, 0.14);
+  transform: translateY(-10px) scale(1.01);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  background-color: #f8fbff;
 }
 
 .gallery-card img {
@@ -82,12 +148,11 @@
   object-fit: cover;
   display: block;
   filter: brightness(1);
-  transition: transform 0.35s ease, filter 0.35s ease;
+  transition: transform 0.5s ease;
 }
 
 .gallery-card:hover img {
-  transform: scale(1.05);
-  filter: brightness(0.9) saturate(1.1);
+  transform: scale(1.08);
 }
 
 .gallery-card-title {
@@ -113,18 +178,20 @@
 }
 
 .gallery-pagination button {
-  border: 1px solid var(--line);
-  background: var(--surface);
+  border: none;
+  background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899, #4f46e5);
+  background-size: 300% auto;
+  color: white;
   border-radius: 10px;
   padding: 8px 16px;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: all 0.5s ease;
 }
 
 .gallery-pagination button:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-1px);
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
 }
 
 .gallery-pagination button:disabled {
@@ -382,5 +449,17 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes textGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes bgGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
