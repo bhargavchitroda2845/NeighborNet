@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MATRIMONIAL_LIST_API_URL } from "../config/api";
+import { useAuth } from "../context/AuthContext";
 import "./Matrimonial.css";
 
 function normalizeMaritalStatus(value) {
@@ -18,6 +19,7 @@ function formatMaritalStatus(value) {
 function Matrimonial() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const [profiles, setProfiles] = useState([]);
   const [gender, setGender] = useState("all");
   const [maritalStatus, setMaritalStatus] = useState("all");
@@ -27,7 +29,8 @@ function Matrimonial() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(MATRIMONIAL_LIST_API_URL)
+    const apiUrl = `${MATRIMONIAL_LIST_API_URL}?logged_in=${isAuthenticated}`;
+    fetch(apiUrl, { credentials: "include" })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load matrimonial profiles");
         return res.json();
@@ -60,7 +63,7 @@ function Matrimonial() {
         setError("Unable to load matrimonial profiles.");
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [isAuthenticated]);
 
 
   useEffect(() => {
