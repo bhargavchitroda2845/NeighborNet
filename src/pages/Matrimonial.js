@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { MATRIMONIAL_LIST_API_URL } from "../config/api";
 import "./Matrimonial.css";
 
 function normalizeMaritalStatus(value) {
@@ -21,13 +22,46 @@ function Matrimonial() {
   const [gender, setGender] = useState("all");
   const [maritalStatus, setMaritalStatus] = useState("all");
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/data/matrimonialData.json")
-      .then((res) => res.json())
-      .then((data) => setProfiles(data.profiles || []))
-      .catch((err) => console.error("Error loading matrimonial data", err));
+    setLoading(true);
+    fetch(MATRIMONIAL_LIST_API_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load matrimonial profiles");
+        return res.json();
+      })
+      .then((data) => {
+        // Normalize API fields to match card display
+        const normalized = (data.results || []).map((p) => ({
+          id: p.id,
+          name: p.full_name,
+          age: p.age,
+          height: p.height || "N/A",
+          gender: p.gender_label || p.gender,
+          profession: p.occupation || "N/A",
+          location: [p.city, p.state, p.country].filter(Boolean).join(", ") || "N/A",
+          marital_status: p.marital_status_label || p.marital_status,
+          bio: p.about_matrimonial || "",
+          image_url: p.matrimonial_photo_url || p.profile_image_url || "",
+          blood_group: p.blood_group,
+          gotra: p.gotra,
+          manglik: p.manglik_label,
+          annual_income: p.annual_income,
+          education: p.education,
+          relation: p.relation_label,
+        }));
+        setProfiles(normalized);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Error loading matrimonial data", err);
+        setError("Unable to load matrimonial profiles.");
+      })
+      .finally(() => setLoading(false));
   }, []);
+
 
   useEffect(() => {
     if (!location.state?.refreshMatrimonial) {
@@ -118,7 +152,11 @@ function Matrimonial() {
       </div>
 
       <div className="matrimonial-grid">
-        {filteredProfiles.length === 0 ? (
+        {loading ? (
+          <p className="empty-text">Loading profiles...</p>
+        ) : error ? (
+          <p className="empty-text" style={{ color: "red" }}>{error}</p>
+        ) : filteredProfiles.length === 0 ? (
           <p className="empty-text">No profiles found.</p>
         ) : (
           filteredProfiles.map((profile, index) => (

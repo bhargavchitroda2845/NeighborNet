@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { BASE_URL } from '../config/api';
 import './Profile.css';
 
 function Profile() {
@@ -22,6 +23,10 @@ function Profile() {
         setIsLoggingOut(true);
         await logout();
         navigate('/');
+    };
+
+    const handleEditProfile = () => {
+        window.location.href = `${BASE_URL}/member/edit/`;
     };
 
     if (isLoading) {
@@ -202,6 +207,13 @@ function Profile() {
                     )}
 
                     <div className="profile-actions">
+                        <button
+                            className="edit-profile-button"
+                            onClick={handleEditProfile}
+                            disabled={isLoggingOut}
+                        >
+                            Edit Profile
+                        </button>
                         <button
                             className="logout-button"
                             onClick={handleLogout}

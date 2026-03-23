@@ -12,6 +12,9 @@ export const BECOME_MEMBER_API_URL = `${BASE_URL}/member/api/members/create/`;
 export const MASTER_COUNTRIES_API_URL = `${BASE_URL}/api/master/countries/`;
 export const MASTER_STATES_API_URL = `${BASE_URL}/api/master/states/`;
 export const MASTER_CITIES_API_URL = `${BASE_URL}/api/master/cities/`;
+// Matrimonial APIs
+export const MATRIMONIAL_LIST_API_URL = `${BASE_URL}/member/api/matrimonial/`;
+export const MATRIMONIAL_TOGGLE_PUBLIC_API_URL = (id) => `${BASE_URL}/member/api/matrimonial/${id}/toggle-public/`;
 
 // Bidding APIs
 export const BID_PLACE_API_URL = `${BASE_URL}/api/bid/place/`;
