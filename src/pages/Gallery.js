@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import "./Gallery.css";
 import { GALLERY_ALBUMS_API_URL, BASE_URL } from "../config/api";
+import { useAuth } from "../context/AuthContext";
 
 const PAGE_SIZE = 12;
 
@@ -9,6 +10,7 @@ function Gallery() {
   const location = useLocation();
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated, member, isLoading: isAuthLoading } = useAuth();
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,14 +18,17 @@ function Gallery() {
   const [page, setPage] = useState(1);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
+  const username = member?.member?.username || member?.username || "";
+
   const fetchAlbums = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(GALLERY_ALBUMS_API_URL, {
-        credentials: "include", 
+      const apiUrl = `${GALLERY_ALBUMS_API_URL}?logged_in=${isAuthenticated}&username=${username}`;
+      const response = await fetch(apiUrl, {
+        credentials: "include",
       });
       const data = await response.json();
-      
+
       if (data.results) {
         setAlbums(data.results);
       } else {
@@ -37,11 +42,27 @@ function Gallery() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated, username]);
+
+  const lastFetchParams = useRef("");
 
   useEffect(() => {
+    if (isAuthLoading) return;
+    
+    const refreshSuffix = location.state?.refreshGallery ? `refresh-${location.key}` : "normal";
+    const currentParams = `${isAuthenticated}-${username}-${refreshSuffix}`;
+    
+    if (lastFetchParams.current === currentParams) return;
+    lastFetchParams.current = currentParams;
+
     fetchAlbums();
-  }, [fetchAlbums]);
+
+    if (location.state?.refreshGallery) {
+      setSelectedAlbum(null);
+      setPage(1);
+      setLightboxIndex(null);
+    }
+  }, [isAuthLoading, isAuthenticated, username, location.key, location.state, fetchAlbums]);
 
   // Handle URL slug parameter - select album based on URL
   useEffect(() => {
@@ -109,17 +130,6 @@ function Gallery() {
       setPage(totalPages);
     }
   }, [page, totalPages]);
-
-  useEffect(() => {
-    if (!location.state?.refreshGallery) {
-      return;
-    }
-
-    fetchAlbums();
-    setSelectedAlbum(null);
-    setPage(1);
-    setLightboxIndex(null);
-  }, [location.key, location.state, fetchAlbums]);
 
   // Determine which image array the lightbox should loop over
   const currentViewImages = selectedAlbum ? (selectedAlbum.images || []) : allImages;
@@ -236,7 +246,7 @@ function Gallery() {
   };
 
   return (
-    <div 
+    <div
       className="gallery-page"
       onMouseMove={handlePointerMove}
       onTouchStart={handleTouchMove}
@@ -246,7 +256,7 @@ function Gallery() {
       <div className="gallery-header">
         <h1>Community Gallery</h1>
         {selectedAlbum && (
-          <button 
+          <button
             className="btn btn-secondary"
             onClick={() => handleAlbumSelect(null)}
           >
@@ -270,10 +280,10 @@ function Gallery() {
                   style={{ "--index": index }}
                   onClick={() => handleAlbumSelect(album)}
                 >
-                  <img 
-                    src={album.cover_image_url || `${BASE_URL}/static/assets_members/adminlte/dist/img/user2-160x160.jpg`} 
-                    alt={album.title} 
-                    loading="lazy" 
+                  <img
+                    src={album.cover_image_url || `${BASE_URL}/static/assets_members/adminlte/dist/img/user2-160x160.jpg`}
+                    alt={album.title}
+                    loading="lazy"
                   />
                   <span className="gallery-card-title">{album.title}</span>
                 </button>
