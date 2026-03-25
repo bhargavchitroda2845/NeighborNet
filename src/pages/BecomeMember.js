@@ -63,6 +63,14 @@ function BecomeMember() {
   const [loadingStates, setLoadingStates] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
 
+  // OTP Verification State
+  const [otpCode, setOtpCode] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [otpMessage, setOtpMessage] = useState("");
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -226,6 +234,64 @@ function BecomeMember() {
       }
       return { ...prev, [name]: value };
     });
+  };
+
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+    if (!formData.email_id) {
+      setOtpMessage("Please enter an email address first.");
+      return;
+    }
+    setSendingOtp(true);
+    setOtpMessage("");
+    try {
+      const url = BECOME_MEMBER_API_URL.replace("create/", "send-otp/");
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email_id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || data.message || "Failed to send OTP");
+      setOtpSent(true);
+      setOtpMessage("OTP sent to your email.");
+    } catch (err) {
+      window.alert(err.message);
+      if (err.message.toLowerCase().includes("exists")) {
+        setOtpMessage(""); // Clear inline message if it's a duplicate email error
+      } else {
+        setOtpMessage(err.message);
+      }
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    if (!otpCode) {
+      setOtpMessage("Please enter the OTP.");
+      return;
+    }
+    setVerifyingOtp(true);
+    setOtpMessage("");
+    try {
+      const url = BECOME_MEMBER_API_URL.replace("create/", "verify-otp/");
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email_id, otp_code: otpCode }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || data.message || "Failed to verify OTP");
+      setIsEmailVerified(true);
+      setOtpMessage("Email verified successfully.");
+    } catch (err) {
+      window.alert(err.message);
+      setOtpMessage(err.message);
+    } finally {
+      setVerifyingOtp(false);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -415,14 +481,69 @@ function BecomeMember() {
 
         <label>
           Email
-          <input
-            type="email"
-            name="email_id"
-            value={formData.email_id}
-            onChange={handleChange}
-            required
-          />
+          <div style={{ display: "flex", gap: "8px", alignItems: "stretch" }}>
+            <input
+              type="email"
+              name="email_id"
+              value={formData.email_id}
+              onChange={(e) => {
+                if (isEmailVerified) return; // Disallow edit after verification
+                handleChange(e);
+                setOtpSent(false); // Reset OTP state if email changes
+                setOtpMessage("");
+              }}
+              required
+              disabled={isEmailVerified}
+              style={{ flex: 1, margin: 0 }}
+            />
+            {isEmailVerified ? (
+              <span className="otp-button" style={{ color: "#166534", background: "#dcfce7", borderColor: "#86efac", cursor: "default", display: "flex", alignItems: "center" }}>✓ Verified</span>
+            ) : (
+              <button 
+                type="button" 
+                className="otp-button"
+                onClick={handleSendOtp} 
+                disabled={sendingOtp || !formData.email_id}
+              >
+                {sendingOtp ? "Sending..." : (otpSent ? "Resend OTP" : "Send OTP")}
+              </button>
+            )}
+          </div>
         </label>
+
+        {!isEmailVerified && otpSent && (
+          <label>
+            Enter OTP
+            <div style={{ display: "flex", gap: "8px", alignItems: "stretch" }}>
+              <input
+                type="text"
+                maxLength={6}
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value)}
+                placeholder="6-digit code"
+                style={{ flex: 1, margin: 0 }}
+              />
+              <button 
+                type="button" 
+                className="otp-button"
+                onClick={handleVerifyOtp} 
+                disabled={verifyingOtp || !otpCode}
+              >
+                {verifyingOtp ? "Verifying..." : "Verify OTP"}
+              </button>
+            </div>
+            {otpMessage && (
+              <div style={{ 
+                color: isEmailVerified ? "#166534" : (otpMessage.includes("sent") ? "#0e7490" : "#991b1b"), 
+                fontSize: "0.85em", 
+                marginTop: "4px",
+                fontWeight: "500"
+              }}>
+                {otpMessage}
+              </div>
+            )}
+          </label>
+        )}
 
         <label>
           Gender
@@ -539,8 +660,8 @@ function BecomeMember() {
 
         <div id="become-member-recaptcha" style={{ margin: "12px 0" }} />
 
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Submitting..." : "Submit Request"}
+        <button type="submit" disabled={submitting || !isEmailVerified}>
+          {submitting ? "Submitting..." : (!isEmailVerified ? "Please Verify Email" : "Submit Request")}
         </button>
       </form>
 

@@ -118,7 +118,7 @@
   grid-column: 1 / -1;
 }
 
-.become-member-form button {
+.become-member-form button[type="submit"] {
   grid-column: 1 / -1;
   width: 100%;
   margin-top: 4px;
@@ -134,11 +134,36 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
-.become-member-form button:disabled {
+.become-member-form button[type="submit"]:disabled {
   opacity: 0.72;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.otp-button {
+  padding: 11px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  height: 100%; /* Match input height */
+  box-sizing: border-box;
+}
+
+.otp-button:hover:not(:disabled) {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+.otp-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .become-member-success,
