@@ -29,6 +29,8 @@ export const GALLERY_ALBUMS_API_URL = `${BASE_URL}/gallery/api/all/`;
 export const GALLERY_MY_ALBUMS_API_URL = `${BASE_URL}/gallery/api/my/`;
 export const GALLERY_CREATE_ALBUM_API_URL = `${BASE_URL}/gallery/api/create/`;
 export const GALLERY_ADMIN_PENDING_API_URL = `${BASE_URL}/gallery/api/admin/pending/`;
+export const GALLERY_GOOGLE_DRIVE_CONNECT_URL = `${BASE_URL}/gallery/google-drive/connect/`;
+export const GALLERY_GOOGLE_DRIVE_STATUS_URL = `${BASE_URL}/gallery/google-drive/status/`;
 
 // Business APIs
 export const BUSINESS_LIST_API_URL = `${BASE_URL}/business/all/`;

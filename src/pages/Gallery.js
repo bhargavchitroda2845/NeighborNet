@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import "./Gallery.css";
-import { GALLERY_ALBUMS_API_URL, BASE_URL } from "../config/api";
+import { GALLERY_ALBUMS_API_URL, BASE_URL, GALLERY_GOOGLE_DRIVE_CONNECT_URL, GALLERY_GOOGLE_DRIVE_STATUS_URL } from "../config/api";
 import { useAuth } from "../context/AuthContext";
 
 const PAGE_SIZE = 12;
@@ -17,6 +17,8 @@ function Gallery() {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [page, setPage] = useState(1);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [driveConnected, setDriveConnected] = useState(false);
+  const [folderExists, setFolderExists] = useState(true);
 
   const username = member?.member?.username || member?.username || "";
 
@@ -44,10 +46,26 @@ function Gallery() {
     }
   }, [isAuthenticated, username]);
 
+  const checkDriveStatus = useCallback(async () => {
+    if (!isAuthenticated) return;
+    try {
+      const response = await fetch(GALLERY_GOOGLE_DRIVE_STATUS_URL, {
+        credentials: "include",
+      });
+      const data = await response.json();
+      setDriveConnected(data.connected);
+      setFolderExists(data.folder_exists ?? true);
+    } catch (err) {
+      console.error("Error checking drive status", err);
+    }
+  }, [isAuthenticated]);
+
   const lastFetchParams = useRef("");
 
   useEffect(() => {
     if (isAuthLoading) return;
+    
+    checkDriveStatus();
     
     const refreshSuffix = location.state?.refreshGallery ? `refresh-${location.key}` : "normal";
     const currentParams = `${isAuthenticated}-${username}-${refreshSuffix}`;
@@ -255,14 +273,30 @@ function Gallery() {
       <div className="cursor-follow-glow" aria-hidden="true" />
       <div className="gallery-header">
         <h1>Community Gallery</h1>
-        {selectedAlbum && (
-          <button
-            className="btn btn-secondary"
-            onClick={() => handleAlbumSelect(null)}
-          >
-            Back to All Albums
-          </button>
-        )}
+        <div className="header-actions">
+          {isAuthenticated && (
+            <div className={`drive-status-bar ${!driveConnected || !folderExists ? 'status-warning' : 'status-healthy'}`}>
+                <div className="status-message">
+                    <i className="fab fa-google-drive mr-2"></i>
+                    <strong>Google Drive Status:</strong>
+                    <span className="ml-2">
+                        {!driveConnected ? 'Not Connected' : !folderExists ? 'Connection Broken (Root folder missing)' : 'Connected & Healthy'}
+                    </span>
+                </div>
+                <a href={GALLERY_GOOGLE_DRIVE_CONNECT_URL} className="btn-reconnect-compact">
+                    <i className="fas fa-sync-alt mr-1"></i> {!driveConnected ? 'Link Drive' : 'Reconnect / Fix'}
+                </a>
+            </div>
+          )}
+          {selectedAlbum && (
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleAlbumSelect(null)}
+            >
+              Back to All Albums
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Album Cards View */}
