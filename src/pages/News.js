@@ -303,7 +303,7 @@ function News() {
               onClick={() => navigate(`/news/${encodeURIComponent(news.slug)}`)}
             >
               {news.image_url ? (
-                <img src={news.image_url} alt={news.title} />
+                <img src={news.image_url} alt={news.title} loading="lazy" decoding="async" />
               ) : (
                 <div className="news-image-empty" aria-hidden="true" />
               )}
@@ -311,9 +311,7 @@ function News() {
               <div className="news-content">
                 <h3>{news.title}</h3>
 
-                <p className="news-date">
-                  
-                  <p className="news-date">
+                <div className="news-date">
                     {new Date(news.created_at).toLocaleString("en-IN", {
                       timeZone: "Asia/Kolkata",
                       year: 'numeric',
@@ -323,9 +321,7 @@ function News() {
                       minute: '2-digit',
                       hour12: true
                     })}
-                  </p>
-
-                </p>
+                  </div>
                 <p className="news-author">
                   Created by: {getCreatedByName(news)}
                 </p>

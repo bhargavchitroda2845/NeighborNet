@@ -1,210 +1,169 @@
 .become-member-page {
   position: relative;
   overflow: hidden;
-  max-width: 980px;
-  margin: 28px auto;
-  padding: 28px;
-  border-radius: 20px;
-  border: 1px solid #e2e8f0;
-  background:
-    radial-gradient(circle at 12% 0%, rgba(14, 116, 144, 0.15), transparent 48%),
-    radial-gradient(circle at 92% 100%, rgba(245, 158, 11, 0.14), transparent 42%),
-    linear-gradient(150deg, #f8fafc, #f1f5f9 55%, #fff7ed);
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition);
 }
 
 .become-member-page::before,
 .become-member-page::after {
   content: "";
   position: absolute;
-  width: 280px;
-  height: 280px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
-  filter: blur(36px);
-  pointer-events: none;
+  filter: blur(60px);
+  opacity: 0.3;
   z-index: 0;
+  animation: float 12s ease-in-out infinite alternate;
 }
 
 .become-member-page::before {
-  top: -90px;
-  left: -70px;
-  background: rgba(14, 116, 144, 0.24);
+  top: -100px;
+  left: -100px;
+  background: var(--primary);
 }
 
 .become-member-page::after {
-  right: -90px;
-  bottom: -110px;
-  background: rgba(249, 115, 22, 0.2);
+  right: -100px;
+  bottom: -100px;
+  background: var(--secondary);
+  animation-delay: -6s;
 }
 
 .become-member-page > * {
   position: relative;
-  z-index: 1;
-}
-
-.become-member-page > .cursor-follow-glow {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      290px circle at var(--mx, 50%) var(--my, 35%),
-      rgba(14, 116, 144, 0.2),
-      rgba(14, 116, 144, 0.08) 34%,
-      rgba(14, 116, 144, 0) 70%
-    ),
-    radial-gradient(
-      240px circle at calc(var(--mx, 50%) + 55px) calc(var(--my, 35%) - 20px),
-      rgba(249, 115, 22, 0.16),
-      rgba(249, 115, 22, 0.07) 36%,
-      rgba(249, 115, 22, 0) 72%
-    );
-  animation: memberCursorAura 3.5s ease-in-out infinite;
+  z-index: 10;
 }
 
 .become-member-page h1 {
   margin: 0;
-  font-size: clamp(1.9rem, 3.6vw, 2.5rem);
-  letter-spacing: 0.3px;
-  color: #0f172a;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -1.5px;
 }
 
 .become-member-subtitle {
-  margin: 8px 0 22px;
-  color: #334155;
-  line-height: 1.55;
-  max-width: 66ch;
+  margin: 12px 0 32px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 1.1rem;
+  max-width: 60ch;
 }
 
 .become-member-form {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 24px;
 }
 
 .become-member-form label {
-  display: grid;
-  gap: 7px;
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 .become-member-form input,
 .become-member-form select,
 .become-member-form textarea {
   width: 100%;
-  padding: 11px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  color: #0f172a;
-  background: rgba(255, 255, 255, 0.9);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: inherit;
+  background: white;
+  transition: var(--transition);
+  color: var(--text-main);
 }
 
 .become-member-form input:focus,
 .become-member-form select:focus,
 .become-member-form textarea:focus {
   outline: none;
-  border-color: #0e7490;
-  box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.15);
-  transform: translateY(-1px);
-}
-
-.become-member-form label:last-of-type {
-  grid-column: 1 / -1;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  transform: translateY(-2px);
 }
 
 .become-member-form button[type="submit"] {
   grid-column: 1 / -1;
-  width: 100%;
-  margin-top: 4px;
-  padding: 12px 18px;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  background: linear-gradient(120deg, #0f172a, #0e7490);
-  color: #ffffff;
-  font-size: 1rem;
+  margin-top: 12px;
+  padding: 14px 24px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--grad-primary);
+  background-size: 200% auto;
+  color: white;
+  font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: 0.3px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  transition: var(--transition);
+  box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+}
+
+.become-member-form button[type="submit"]:hover:not(:disabled) {
+  background-position: right center;
+  transform: translateY(-3px);
+  box-shadow: 0 20px 35px -10px rgba(79, 70, 229, 0.4);
 }
 
 .become-member-form button[type="submit"]:disabled {
-  opacity: 0.72;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.otp-button {
-  padding: 11px 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  background: #f8fafc;
-  color: #0f172a;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-  height: 100%; /* Match input height */
-  box-sizing: border-box;
-}
-
-.otp-button:hover:not(:disabled) {
-  background: #e2e8f0;
-  border-color: #94a3b8;
-}
-
-.otp-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
+.otp-button {
+  padding: 12px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.otp-button:hover:not(:disabled) {
+  background: white;
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
 .become-member-success,
 .become-member-error {
-  margin-top: 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: var(--radius-md);
   font-weight: 600;
-  word-break: break-word;
+  text-align: center;
 }
 
 .become-member-success {
-  color: #166534;
-  background: #dcfce7;
-  border: 1px solid #86efac;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
 }
 
 .become-member-error {
+  background: #fef2f2;
   color: #991b1b;
-  background: #fee2e2;
-  border: 1px solid #fca5a5;
+  border: 1px solid #fecaca;
 }
 
-@keyframes memberCursorAura {
-  0%,
-  100% {
-    filter: saturate(1) brightness(1);
-  }
-  50% {
-    filter: saturate(1.18) brightness(1.05);
-  }
-}
-
-@media (max-width: 800px) {
-  .become-member-page {
-    margin: 16px;
-    padding: 20px;
-    border-radius: 16px;
-  }
-
-  .become-member-form {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 768px) {
+  .become-member-page { margin: 20px; padding: 24px; }
+  .become-member-form { grid-template-columns: 1fr; }
 }

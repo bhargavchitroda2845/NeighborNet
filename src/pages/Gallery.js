@@ -284,6 +284,7 @@ function Gallery() {
                     src={album.cover_image_url || `${BASE_URL}/static/assets_members/adminlte/dist/img/user2-160x160.jpg`}
                     alt={album.title}
                     loading="lazy"
+                    decoding="async"
                   />
                   <span className="gallery-card-title">{album.title}</span>
                 </button>
@@ -316,7 +317,7 @@ function Gallery() {
                   style={{ "--index": index }}
                   onClick={() => setLightboxIndex(index)}
                 >
-                  <img src={img.image_url} alt={img.title || selectedAlbum.title} loading="lazy" />
+                  <img src={img.image_url} alt={img.title || selectedAlbum.title} loading="lazy" decoding="async" />
                   {img.title && <span className="gallery-card-title">{img.title}</span>}
                 </button>
               ))}

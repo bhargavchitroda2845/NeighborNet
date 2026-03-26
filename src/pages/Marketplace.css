@@ -2,10 +2,11 @@
    MARKETPLACE PAGE
 ========================= */
 .buysell-container {
-  padding: 40px 160px;
-  background: linear-gradient(135deg, #f4f7fb, #eef2ff, #fce7f3, #e0e7ff);
+  padding: var(--page-padding);
+  background: var(--grad-mesh);
   background-size: 300% 300%;
-  animation: bgGradientShift 12s ease infinite;
+  animation: bgGradientShift 15s ease infinite alternate;
+  will-change: background-position;
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -77,12 +78,12 @@
   margin-bottom: 30px;
   font-size: 36px;
   font-weight: 800;
-  background: linear-gradient(135deg, #4f46e5, #ec4899, #f59e0b, #4f46e5);
-  background-size: 300% 300%;
+  background: var(--grad-primary);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: fadeDown 0.6s ease-in-out, textGradientShift 8s ease infinite;
+  animation: fadeDown 0.6s ease-in-out, logoGradient 4s linear infinite;
 }
 
 /* =========================
@@ -95,22 +96,27 @@
 }
 
 .category-buttons button {
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
   outline: none;
   cursor: pointer;
-  margin: 0 10px 10px;
-  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-  background: #fff;
+  margin: 0 8px 10px;
+  transition: var(--transition);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  color: var(--text-main);
   animation: popIn 0.5s ease both;
 }
 
 .category-buttons button:hover {
-  border-color: #007bff;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.16);
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .category-buttons button:nth-child(1) {
@@ -149,33 +155,36 @@
 }
 
 .marketplace-search-wrap input {
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
   margin: 0 10px 10px;
   outline: none;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-  width: 260px;
+  transition: var(--transition);
+  width: 320px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
   animation: fadeRight 0.6s ease both;
 }
 
 .marketplace-search-wrap input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(16, 24, 39, 0.1);
   transform: translateY(-1px);
 }
 
 .marketplace-search-btn {
-  padding: 10px 18px;
-  font-size: 15px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
   border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899, #4f46e5);
-  background-size: 300% auto;
+  border-radius: var(--radius-full);
+  background: var(--grad-primary);
+  background-size: 200% auto;
   color: #fff;
   cursor: pointer;
-  transition: all 0.5s ease;
+  transition: var(--transition);
   animation: fadeLeft 0.6s ease both;
   animation-delay: 0.08s;
 }
@@ -203,22 +212,25 @@
   width: 100%;
   position: relative;
   cursor: pointer;
-  background: #fff;
-  border-radius: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
-  height: 400px;
-  transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
+  height: 380px;
+  transition: var(--transition);
   opacity: 0;
   animation: cardEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .card:hover {
-  transform: translateY(-10px) scale(1.01);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  background-color: #f8fbff;
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .card img {
@@ -444,12 +456,6 @@
 }
 
 @keyframes textGradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes bgGradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }

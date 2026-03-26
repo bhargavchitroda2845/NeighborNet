@@ -177,7 +177,7 @@ function Matrimonial() {
                 }
               }}
             >
-              <img src={profile.image_url} alt={profile.name} />
+              <img src={profile.image_url} alt={profile.name} loading="lazy" decoding="async" />
               <div className="profile-content">
                 <h3>{profile.name}</h3>
                 <p className="meta-line">

@@ -1,245 +1,198 @@
 .matrimonial-page {
-  --surface: #ffffff;
-  --line: #d8dce3;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --accent: #c62828;
-  min-height: 100vh;
-  padding: 40px 100px;
-  background: linear-gradient(135deg, #f4f7fb, #eef2ff, #fce7f3, #e0e7ff);
-  background-size: 300% 300%;
-  color: var(--text);
-  animation: pageIn 0.45s ease, bgGradientShift 12s ease infinite;
   position: relative;
   overflow: hidden;
-  isolation: isolate;
 }
 
 .matrimonial-page > * {
   position: relative;
-  z-index: 1;
-}
-
-.matrimonial-page > .cursor-follow-glow {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      320px circle at var(--mx, 50%) var(--my, 30%),
-      rgba(56, 189, 248, 0.24),
-      rgba(56, 189, 248, 0.1) 34%,
-      rgba(56, 189, 248, 0) 68%
-    ),
-    radial-gradient(
-      260px circle at calc(var(--mx, 50%) + 60px) calc(var(--my, 30%) - 30px),
-      rgba(244, 114, 182, 0.2),
-      rgba(244, 114, 182, 0.08) 36%,
-      rgba(244, 114, 182, 0) 72%
-    );
-  animation: cursorAura 3.6s ease-in-out infinite;
+  z-index: 10;
 }
 
 .matrimonial-header {
   max-width: 1200px;
-  margin: 0 auto 18px;
+  margin: 0 auto 48px;
+  text-align: center;
 }
 
 .matrimonial-header h1 {
-  margin: 0;
-  font-size: 36px;
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
   font-weight: 800;
-  background: linear-gradient(135deg, #4f46e5, #ec4899, #f59e0b, #4f46e5);
-  background-size: 300% 300%;
+  background: var(--grad-primary);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: textGradientShift 8s ease infinite;
-  text-align: center;
+  animation: logoGradient 5s linear infinite;
+  letter-spacing: -1.5px;
+  margin-bottom: 12px;
 }
 
 .matrimonial-header p {
-  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  font-weight: 500;
 }
 
-.matrimonial-header p {
-  margin: 8px 0 0;
-  color: var(--muted);
-}
-
+/* =========================
+   FILTERS
+========================= */
 .matrimonial-filters {
-  max-width: 1200px;
-  margin: 0 auto 18px;
-  display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
+  max-width: 1000px;
+  margin: 0 auto 60px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  padding: 16px;
+  border-radius: var(--radius-full);
+  display: flex;
   gap: 12px;
+  align-items: center;
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition);
 }
 
-.matrimonial-filters input,
+.matrimonial-filters:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+}
+
+.matrimonial-filters input {
+  flex: 2;
+  background: transparent;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text-main);
+  outline: none;
+}
+
 .matrimonial-filters select {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
-  padding: 10px 12px;
-  font-size: 0.95rem;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition);
 }
 
+/* =========================
+   GRID
+========================= */
 .matrimonial-grid {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start; /* Prevent stretching */
+  gap: 24px;
 }
 
 .profile-card {
-  border-radius: 14px;
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--surface);
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.1);
-  border: 1px solid rgba(216, 220, 227, 0.6);
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition);
   cursor: pointer;
-  transform: translateY(12px);
-  opacity: 0;
-  animation: cardIn 0.42s ease forwards;
-  animation-delay: calc(var(--index, 0) * 40ms);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 280px;
+  min-width: 260px;
 }
 
 .profile-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.14);
+  transform: translateY(-12px);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.18);
+  border-color: var(--primary);
 }
 
 .profile-card img {
   width: 100%;
-  height: 220px;
+  height: 240px; /* Reduced from 280px */
   object-fit: cover;
-  display: block;
-  transition: transform 0.35s ease, filter 0.35s ease;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .profile-card:hover img {
-  transform: scale(1.04);
-  filter: brightness(0.94) saturate(1.08);
+  transform: scale(1.08);
 }
 
 .profile-content {
-  padding: 12px 14px 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .profile-content h3 {
-  margin: 0 0 6px;
-  font-size: 1.1rem;
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
 .meta-line {
-  margin: 3px 0;
-  color: #3c4658;
   font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 500;
 }
 
 .bio {
-  margin: 8px 0 12px;
-  color: var(--muted);
+  margin: 12px 0 16px; /* Reduced from 16px 0 20px */
   font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.5;
+  opacity: 0.85;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.8em; /* Adjusted height */
 }
 
 .profile-content button {
-  border: 0;
-  border-radius: 10px;
-  padding: 9px 12px;
-  background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899, #4f46e5);
-  background-size: 300% auto;
-  color: #fff;
+  margin-top: auto;
+  background: var(--grad-primary);
+  background-size: 200% auto;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.5s ease;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
 }
 
 .profile-content button:hover {
   background-position: right center;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
 }
 
 .empty-text {
   grid-column: 1 / -1;
   text-align: center;
-  color: var(--muted);
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  padding: 60px 0;
 }
 
-@media (max-width: 1024px) {
-  .matrimonial-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 760px) {
-  .matrimonial-page {
-    padding: 16px;
-  }
-
-  .matrimonial-filters {
-    grid-template-columns: 1fr;
-  }
-
-  .matrimonial-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-card img {
-    height: 230px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .matrimonial-page,
-  .profile-card {
-    animation: none !important;
-  }
-
-  .profile-card,
-  .profile-card img,
-  .profile-content button {
-    transition: none !important;
-  }
-}
-
-@keyframes pageIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes cardIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes textGradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes bgGradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes cursorAura {
-  0%, 100% { filter: saturate(1) brightness(1); }
-  50% { filter: saturate(1.2) brightness(1.05); }
+@media (max-width: 768px) {
+  .matrimonial-page { padding: 40px 20px; }
+  .matrimonial-filters { flex-direction: column; border-radius: var(--radius-lg); padding: 24px; }
+  .matrimonial-filters input, .matrimonial-filters select { width: 100%; }
+  .matrimonial-grid { grid-template-columns: 1fr; }
 }

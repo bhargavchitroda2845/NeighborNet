@@ -233,7 +233,7 @@ const Business = () => {
               {/* Image */}
               <div className="card-image">
                 {biz.image_url ? (
-                  <img src={biz.image_url} alt={biz.name} />
+                  <img src={biz.image_url} alt={biz.name} loading="lazy" decoding="async" />
                 ) : (
                   <div className="card-image-placeholder">
                     <span className="placeholder-icon">🏪</span>

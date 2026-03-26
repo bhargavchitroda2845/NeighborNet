@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../assets/logo.png';
 import { useState } from "react";
 import "./Navbar.css";
 import { ADMIN_URL } from "../config/api";
@@ -73,7 +74,10 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="logo">NeighborNet</Link>
+      <Link to="/" className="navbar-logo">
+        NeighborNet
+        <img src={logo} alt="NeighborNet" className="navbar-logo-emblem" />
+      </Link>
 
       {/* 3-dot menu icon (mobile) */}
       <div

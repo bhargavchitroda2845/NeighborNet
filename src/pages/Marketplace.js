@@ -218,7 +218,7 @@ const Marketplace = () => {
               </span>
 
               {item.image_url || item.image ? (
-                <img src={item.image_url || item.image} alt={item.title} />
+                <img src={item.image_url || item.image} alt={item.title} loading="lazy" decoding="async" />
               ) : (
                 <div className="card-image-empty" aria-hidden="true" />
               )}

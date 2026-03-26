@@ -1,21 +1,60 @@
 /* ==============================
-   NAVBAR BASE
+   NAVBAR BASE (Floating Glass)
 ============================== */
 .navbar {
-  background-color: #222;
-  padding: 15px 20px;
+  position: sticky;
+  top: 15px;
+  left: 20px;
+  right: 20px;
+  margin: 15px 20px;
+  padding: 12px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 9999; /* IMPORTANT */
+  z-index: 1000;
+  
+  /* Glassmorphism */
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--glass-shadow);
+  
+  transition: var(--transition);
 }
 
-.logo {
-  color: orange;
-  font-size: 22px;
-  font-weight: bold;
+.navbar-logo {
+  font-size: 26px;
+  font-weight: 850;
   text-decoration: none;
+  background: var(--grad-primary);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: logoGradient 4s linear infinite;
+  letter-spacing: -1.2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-logo-emblem {
+  height: 36px;
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  transition: var(--transition);
+}
+
+.navbar-logo:hover .navbar-logo-emblem {
+  transform: rotate(15deg) scale(1.1);
+}
+
+@keyframes logoGradient {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
 }
 
 /* ==============================
@@ -24,151 +63,132 @@
 .nav-links {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 10px;
+  gap: 24px;
   margin: 0;
   padding: 0;
   align-items: center;
 }
 
-.nav-links li {
-  display: flex;
-  align-items: center;
-}
-
 .nav-links li a {
-  color: white;
+  color: var(--text-main);
   text-decoration: none;
-  transition: 0.3s;
-  white-space: nowrap;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  position: relative;
 }
 
-.nav-links li a:hover {
-  color: orange;
+.nav-links li a:not(.backend-link)::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background: var(--primary);
+  transition: var(--transition);
+  border-radius: var(--radius-full);
+}
+
+.nav-links li a:not(.backend-link):hover {
+  color: var(--primary);
+}
+
+.nav-links li a:not(.backend-link):hover::after {
+  width: 100%;
 }
 
 /* ==============================
-   3 DOT MENU ICON
+   BUTTON STYLES (Refined)
 ============================== */
-.menu-icon {
-  display: none;
-  font-size: 26px;
-  color: white;
+.backend-link {
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white !important;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
   cursor: pointer;
 }
+
+.backend-link:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.backend-link:active {
+  transform: translateY(0);
+}
+
+.backend-link.become-member { background: var(--grad-primary); background-size: 200% auto; animation: logoGradient 6s linear infinite; }
+.backend-link.member-login { background: var(--c-green); }
+.backend-link.admin { background: var(--c-red); }
+.backend-link.profile-link { background: var(--c-blue); }
+.logout-btn { background: var(--c-purple); color: white; }
 
 /* ==============================
    MOBILE VIEW
 ============================== */
-@media (max-width: 768px) {
+.menu-icon {
+  display: none;
+  font-size: 28px;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 4px;
+  transition: var(--transition);
+}
 
-  .menu-icon {
-    display: block;
-  }
+@media (max-width: 1024px) {
+  .nav-links { gap: 12px; }
+  .nav-links li a { font-size: 0.85rem; }
+  .backend-link { padding: 8px 14px; }
+}
+
+@media (max-width: 768px) {
+  .navbar { margin: 10px; border-radius: var(--radius-lg); }
+  .menu-icon { display: block; }
 
   .nav-links {
-    position: fixed; /* 🔥 changed from absolute to fixed */
-    top: 65px; /* adjust if navbar height changes */
-    right: 10px;
-    width: 220px;
-
-    background-color: #222;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 240px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     flex-direction: column;
-    border-radius: 8px;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-
-    z-index: 10000; /* 🔥 VERY IMPORTANT */
-
-    /* animation */
-    opacity: 0;
-    transform: translateY(-15px);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    
+    /* Reveal animation */
     pointer-events: none;
-    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    transition: var(--transition);
   }
 
   .nav-links.show {
-    opacity: 1;
-    transform: translateY(0);
     pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 
   .nav-links li {
-    padding: 14px;
-    border-bottom: 1px solid #333;
     width: 100%;
-    justify-content: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 12px 0;
   }
-
-  .nav-links li:last-child {
-    border-bottom: none;
-  }
-}
-
-/* ==============================
-   BUTTON STYLES
-============================== */
-.backend-link {
-  background-color: #16a34a;
-  padding: 8px 14px;
-  border-radius: 5px;
-  display: inline-block;
-}
-
-.backend-link:hover {
-  background-color: #15803d;
-}
-
-.backend-link.become-member {
-  background-color: #2563eb;
-}
-
-.backend-link.become-member:hover {
-  background-color: #1d4ed8;
-}
-
-.backend-link.admin {
-  background-color: #dc2626;
-}
-
-.backend-link.admin:hover {
-  background-color: #b91c1c;
-}
-
-.backend-link.member-login {
-  background-color: #16a34a;
-}
-
-.backend-link.member-login:hover {
-  background-color: #15803d;
-}
-
-.backend-link.profile-link {
-  background-color: #7c3aed;
-}
-
-.backend-link.profile-link:hover {
-  background-color: #6d28d9;
-}
-
-.logout-btn {
-  background-color: #dc2626;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.logout-btn:hover {
-  background-color: #b91c1c;
-}
-
-.logout-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  
+  .nav-links li:last-child { border-bottom: none; }
+  
+  .nav-links li a { width: 100%; display: block; text-align: center; }
 }
