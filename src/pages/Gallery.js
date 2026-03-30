@@ -64,12 +64,12 @@ function Gallery() {
 
   useEffect(() => {
     if (isAuthLoading) return;
-    
+
     checkDriveStatus();
-    
+
     const refreshSuffix = location.state?.refreshGallery ? `refresh-${location.key}` : "normal";
     const currentParams = `${isAuthenticated}-${username}-${refreshSuffix}`;
-    
+
     if (lastFetchParams.current === currentParams) return;
     lastFetchParams.current = currentParams;
 
@@ -80,7 +80,7 @@ function Gallery() {
       setPage(1);
       setLightboxIndex(null);
     }
-  }, [isAuthLoading, isAuthenticated, username, location.key, location.state, fetchAlbums]);
+  }, [isAuthLoading, isAuthenticated, username, location.key, location.state, fetchAlbums, checkDriveStatus]);
 
   // Handle URL slug parameter - select album based on URL
   useEffect(() => {
@@ -135,8 +135,6 @@ function Gallery() {
   }, [albums]);
 
   const totalPages = Math.max(1, Math.ceil(allImages.length / PAGE_SIZE));
-  const pageStart = (page - 1) * PAGE_SIZE;
-  const currentPageImages = allImages.slice(pageStart, pageStart + PAGE_SIZE);
 
   useEffect(() => {
     setPage(1);
@@ -150,7 +148,10 @@ function Gallery() {
   }, [page, totalPages]);
 
   // Determine which image array the lightbox should loop over
-  const currentViewImages = selectedAlbum ? (selectedAlbum.images || []) : allImages;
+  const currentViewImages = useMemo(
+    () => (selectedAlbum ? (selectedAlbum.images || []) : allImages),
+    [selectedAlbum, allImages]
+  );
 
   useEffect(() => {
     if (lightboxIndex === null) {
@@ -274,18 +275,18 @@ function Gallery() {
       <div className="gallery-header">
         <h1>Community Gallery</h1>
         <div className="header-actions">
-          {isAuthenticated && (
-            <div className={`drive-status-bar ${!driveConnected || !folderExists ? 'status-warning' : 'status-healthy'}`}>
-                <div className="status-message">
-                    <i className="fab fa-google-drive mr-2"></i>
-                    <strong>Google Drive Status:</strong>
-                    <span className="ml-2">
-                        {!driveConnected ? 'Not Connected' : !folderExists ? 'Connection Broken (Root folder missing)' : 'Connected & Healthy'}
-                    </span>
-                </div>
-                <a href={GALLERY_GOOGLE_DRIVE_CONNECT_URL} className="btn-reconnect-compact">
-                    <i className="fas fa-sync-alt mr-1"></i> {!driveConnected ? 'Link Drive' : 'Reconnect / Fix'}
-                </a>
+          {isAuthenticated && driveConnected && (
+            <div className={`drive-status-bar ${!folderExists ? 'status-warning' : 'status-healthy'}`}>
+              <div className="status-message">
+                <i className="fab fa-google-drive mr-2"></i>
+                <strong>Google Drive Status:</strong>
+                <span className="ml-2">
+                  {!driveConnected ? 'Not Connected' : !folderExists ? 'Connection Broken (Root folder missing)' : 'Connected & Healthy'}
+                </span>
+              </div>
+              <a href={GALLERY_GOOGLE_DRIVE_CONNECT_URL} className="btn-reconnect-compact">
+                <i className="fas fa-sync-alt mr-1"></i> {!driveConnected ? 'Link Drive' : 'Reconnect / Fix'}
+              </a>
             </div>
           )}
           {selectedAlbum && (
