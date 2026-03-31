@@ -36,3 +36,9 @@ export const GALLERY_GOOGLE_DRIVE_STATUS_URL = `${BASE_URL}/gallery/google-drive
 export const BUSINESS_LIST_API_URL = `${BASE_URL}/business/all/`;
 export const BUSINESS_CATEGORIES_API_URL = `${BASE_URL}/business/categories/`;
 export const BUSINESS_DETAIL_API_URL = `${BASE_URL}/business/all/`;
+
+// Career APIs
+export const CAREER_POSTS_API_URL = `${BASE_URL}/career/api/posts/`;
+export const CAREER_POST_DETAIL_API_URL = (id) => `${BASE_URL}/career/api/posts/${id}/`;
+export const CAREER_CREATE_POST_API_URL = `${BASE_URL}/career/api/posts/create/`;
+export const CAREER_POST_TYPES_API_URL = `${BASE_URL}/career/api/post-types/`;

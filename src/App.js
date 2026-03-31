@@ -15,6 +15,8 @@ import BusinessDetails from "./pages/BusinessDetails";
 import Matrimonial from "./pages/Matrimonial";
 import MatrimonialDetails from "./pages/MatrimonialDetails";
 import Gallery from "./pages/Gallery";
+import Career from "./pages/Career";
+import CareerDetails from "./pages/CareerDetails";
 import Contact from "./pages/Contact";
 import BecomeMember from "./pages/BecomeMember";
 import MemberLogin from "./pages/MemberLogin";
@@ -43,6 +45,8 @@ function App() {
             <Route path="/matrimonial/:id" element={<MatrimonialDetails />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/gallery/:slug" element={<Gallery />} />
+            <Route path="/career" element={<Career />} />
+            <Route path="/career/:id" element={<CareerDetails />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/becomemember" element={<BecomeMember />} />
             <Route path="/member-login" element={<MemberLogin />} />

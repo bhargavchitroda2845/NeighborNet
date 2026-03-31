@@ -50,6 +50,14 @@ function Navbar() {
     });
   };
 
+  const handleCareerClick = (e) => {
+    e.preventDefault();
+    setShowMenu(false);
+    navigate("/career", {
+      state: { refreshCareer: true, refreshKey: Date.now() },
+    });
+  };
+
   const handleAboutClick = (e) => {
     e.preventDefault();
     setShowMenu(false);
@@ -93,6 +101,7 @@ function Navbar() {
         <li><Link to="/business" onClick={handleBusinessClick}>Business</Link></li>
         <li><Link to="/matrimonial" onClick={handleMatrimonialClick}>Matrimonial</Link></li>
         <li><Link to="/gallery" onClick={handleGalleryClick}>Gallery</Link></li>
+        <li><Link to="/career" onClick={handleCareerClick}>Career</Link></li>
         <li><Link to="/about" onClick={handleAboutClick}>About Us</Link></li>
         <li><Link to="/contact" onClick={handleContactClick}>Contact</Link></li>
         
