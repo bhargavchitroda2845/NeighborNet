@@ -52,174 +52,168 @@ function Profile() {
     console.log('memberData:', memberData);
 
     return (
-        <div className="profile-container">
-            <div className="profile-content">
+        <div className="profile-page">
+            <div className="profile-container">
                 <div className="profile-header">
-                    <h1>Member Profile</h1>
+                    <h1 className="profile-title">Member Profile</h1>
+                    <p className="profile-subtitle">Personal information and account settings</p>
                 </div>
 
-                <div className="profile-card">
-                    {/* Profile Picture Section */}
-                    <div className="profile-picture-section">
-                        <div className="profile-picture-container">
+                <div className="profile-main-card">
+                    {/* Top Identity Section */}
+                    <div className="profile-identity-section">
+                        <div className="profile-avatar-wrapper">
                             {profileImageUrl ? (
                                 <img
                                     src={profileImageUrl}
                                     alt="Profile"
-                                    className="profile-picture"
+                                    className="profile-avatar"
                                 />
                             ) : (
-                                <div className="profile-picture-placeholder">
+                                <div className="profile-avatar-placeholder">
                                     {memberData.first_name ? memberData.first_name.charAt(0).toUpperCase() : '?'}
                                     {memberData.surname ? memberData.surname.charAt(0).toUpperCase() : ''}
                                 </div>
                             )}
-                        </div>
-                        <div className="profile-name-section">
-                            <h2>{memberData.full_name || `${memberData.first_name} ${memberData.surname}`}</h2>
-                            <p className="profile-username">@{memberData.username}</p>
-                            <span className={`status-badge ${memberData.approval_status?.toLowerCase()}`}>
+                            <div className={`status-badge-floating ${memberData.approval_status?.toLowerCase()}`}>
+                                <i className={`fas ${memberData.approval_status?.toLowerCase() === 'approved' ? 'fa-check-circle' : 'fa-clock'}`}></i>
                                 {memberData.approval_status}
-                            </span>
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="profile-section">
-                        <h2>Personal Information</h2>
-                        <div className="info-grid">
-                            <div className="info-item">
-                                <label>Member Number</label>
-                                <p>{memberData.member_no || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Username</label>
-                                <p>{memberData.username || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>First Name</label>
-                                <p>{memberData.first_name || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Middle Name</label>
-                                <p>{memberData.middle_name || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Surname</label>
-                                <p>{memberData.surname || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Email</label>
-                                <p>{memberData.email_id || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Phone</label>
-                                <p>{memberData.phone_no || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Gender</label>
-                                <p>{memberData.gender_label || memberData.gender || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Date of Birth</label>
-                                <p>{memberData.date_of_birth || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Age</label>
-                                <p>{memberData.age || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Occupation</label>
-                                <p>{memberData.occupation || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Marital Status</label>
-                                <p>{memberData.marital_status_label || memberData.marital_status || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Education</label>
-                                <p>{memberData.education || 'N/A'}</p>
+                        <div className="profile-name-info">
+                            <h2 className="profile-full-name">{memberData.full_name || `${memberData.first_name} ${memberData.surname}`}</h2>
+                            <p className="profile-at-username"><i className="fas fa-at"></i> {memberData.username}</p>
+                            <div className="profile-quick-stats">
+                                <span className="quick-stat"><i className="fas fa-id-badge"></i> NO: {memberData.member_no || '---'}</span>
+                                <span className="quick-stat"><i className="fas fa-calendar-alt"></i> Joined {memberData.created_at ? new Date(memberData.created_at).toLocaleDateString() : '---'}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="profile-section">
-                        <h2>Address Information</h2>
-                        <div className="info-grid">
-                            <div className="info-item">
-                                <label>Country</label>
-                                <p>{memberData.country?.name || 'N/A'}</p>
+                    <div className="profile-grid">
+                        {/* Personal info card */}
+                        <div className="info-glass-card">
+                            <div className="card-header">
+                                <i className="fas fa-user-circle"></i>
+                                <h3>Personal Information</h3>
                             </div>
-                            <div className="info-item">
-                                <label>State</label>
-                                <p>{memberData.state?.name || 'N/A'}</p>
+                            <div className="card-body">
+                                <div className="info-row">
+                                    <span className="info-label">Full Name</span>
+                                    <span className="info-value">{memberData.first_name} {memberData.middle_name} {memberData.surname}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Email</span>
+                                    <span className="info-value">{memberData.email_id || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Phone</span>
+                                    <span className="info-value">{memberData.phone_no || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Gender</span>
+                                    <span className="info-value">{memberData.gender_label || memberData.gender || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Date of Birth</span>
+                                    <span className="info-value">{memberData.date_of_birth || '---'} ({memberData.age || '0'} years)</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Marital Status</span>
+                                    <span className="info-value">{memberData.marital_status_label || memberData.marital_status || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Occupation</span>
+                                    <span className="info-value">{memberData.occupation || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Education</span>
+                                    <span className="info-value">{memberData.education || '---'}</span>
+                                </div>
                             </div>
-                            <div className="info-item">
-                                <label>City</label>
-                                <p>{memberData.city?.name || 'N/A'}</p>
+                        </div>
+
+                        {/* Address info card */}
+                        <div className="info-glass-card">
+                            <div className="card-header">
+                                <i className="fas fa-map-marked-alt"></i>
+                                <h3>Address Details</h3>
                             </div>
-                            <div className="info-item">
-                                <label>Address</label>
-                                <p>{memberData.residential_address || 'N/A'}</p>
+                            <div className="card-body">
+                                <div className="info-row">
+                                    <span className="info-label">Country</span>
+                                    <span className="info-value">{memberData.country?.name || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">State</span>
+                                    <span className="info-value">{memberData.state?.name || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">City</span>
+                                    <span className="info-value">{memberData.city?.name || '---'}</span>
+                                </div>
+                                <div className="info-row address-row">
+                                    <span className="info-label">Residential Address</span>
+                                    <p className="info-value address-text">{memberData.residential_address || '---'}</p>
+                                </div>
+
+                                <div className="account-status-divider">
+                                    <i className="fas fa-shield-alt"></i>
+                                    <h3>Account Status</h3>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Account Type</span>
+                                    <span className="info-value">{memberData.status || 'Standard Private'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Approval</span>
+                                    <span className="info-value">{memberData.approval_status || '---'}</span>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Member Since</span>
+                                    <span className="info-value">{memberData.created_at ? new Date(memberData.created_at).toLocaleDateString() : '---'}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="profile-section">
-                        <h2>Account Status</h2>
-                        <div className="info-grid">
-                            <div className="info-item">
-                                <label>Status</label>
-                                <p>{memberData.status || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Approval Status</label>
-                                <p>{memberData.approval_status || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Approved At</label>
-                                <p>{memberData.approved_at ? new Date(memberData.approved_at).toLocaleDateString() : 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Member Since</label>
-                                <p>{memberData.created_at ? new Date(memberData.created_at).toLocaleDateString() : 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-
+                    {/* Stats Section */}
                     {member.counts && (
-                        <div className="profile-section">
-                            <h2>Activity Statistics</h2>
-                            <div className="stats-grid">
-                                <div className="stat-item">
-                                    <div className="stat-number">{member.counts.details || 0}</div>
-                                    <div className="stat-label">Details</div>
-                                </div>
-                                <div className="stat-item">
-                                    <div className="stat-number">{member.counts.news || 0}</div>
-                                    <div className="stat-label">News Posts</div>
-                                </div>
-                                <div className="stat-item">
-                                    <div className="stat-number">{member.counts.listings || 0}</div>
-                                    <div className="stat-label">Listings</div>
-                                </div>
+                        <div className="profile-stats-bar">
+                            <div className="profile-stat-box">
+                                <span className="stat-count">{member.counts.details || 0}</span>
+                                <span className="stat-label">Member Details</span>
+                            </div>
+                            <div className="profile-stat-box">
+                                <span className="stat-count">{member.counts.news || 0}</span>
+                                <span className="stat-label">News Posts</span>
+                            </div>
+                            <div className="profile-stat-box">
+                                <span className="stat-count">{member.counts.listings || 0}</span>
+                                <span className="stat-label">Marketplace List</span>
                             </div>
                         </div>
                     )}
 
-                    <div className="profile-actions">
+                    {/* Final Actions */}
+                    <div className="profile-footer-actions">
                         <button
-                            className="edit-profile-button"
+                            className="btn-edit-profile"
                             onClick={handleEditProfile}
                             disabled={isLoggingOut}
                         >
-                            Edit Profile
+                            <i className="fas fa-edit"></i> Edit Profile
                         </button>
                         <button
-                            className="logout-button"
+                            className="btn-logout-profile"
                             onClick={handleLogout}
                             disabled={isLoggingOut}
                         >
-                            {isLoggingOut ? 'Logging out...' : 'Logout'}
+                            {isLoggingOut ? (
+                                <><i className="fas fa-spinner fa-spin"></i> Logging out...</>
+                            ) : (
+                                <><i className="fas fa-sign-out-alt"></i> Logout System</>
+                            )}
                         </button>
                     </div>
                 </div>
